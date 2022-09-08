@@ -1,5 +1,5 @@
 STUID = ysyx_22050058
-STUNAME = 文家宝
+STUNAME =  文家宝
 
 # DO NOT modify the following code!!!
 
