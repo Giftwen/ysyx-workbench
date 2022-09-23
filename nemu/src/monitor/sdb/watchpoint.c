@@ -20,7 +20,8 @@
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
-
+  char    *exp;
+  word_t  lastval;
   /* TODO: Add more members if necessary */
 
 } WP;
@@ -40,4 +41,77 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
+WP* new_wp(){
+  if(free_==NULL){
+    assert(0);
+  }
+  WP *p   = free_;
+  free_   = free_ -> next;
+  return p;
+}
+void freewp(WP *wp){
+  if(!(wp_pool <=wp && wp <(wp_pool+NR_WP))){
+    assert(0);
+  }
+  free(wp->exp);
+  wp->next = free_;
+  free_ = wp;
+}
 
+int set_watchpoint(char* w){
+  bool success;
+  word_t  val =expr(w,&success);
+  if (!success){
+    return -1;
+  }
+  WP *p = new_wp();
+  p->exp=strdup(w);
+  p->lastval=val; 
+  p->next=head;
+  head  = p;
+
+  return p->NO;
+}
+
+
+void list_watchpoint(){
+  if(head == NULL){
+    printf("NO WP\n");
+    return ;
+  }
+  printf("%8s\t%8s\t%8s\t\n","NO","Adress","Enable");
+  WP *p;
+  for(p=head ;p != NULL; p=p->next){
+    printf("%8d\t%8s\t" FMT_WORD "\n",p->NO,p->exp,p->lastval);
+  }
+
+}
+
+
+
+bool deltewp(int NO){
+  WP *p;
+  WP *p_1=NULL;
+  for(p=head;p != NULL; p_1=p,p=p->next){
+    if(p->NO==NO){
+      break;
+    }
+  }
+    if(p==NULL){
+      return false;
+    }
+    
+    p_1->next=p->next;
+    
+    freewp(p);
+    return true;
+}
+
+void scan_wp(vaddr_t pc){
+  WP *p;
+  for (p = head; p != NULL; p=p->next)
+  {
+    ;
+  }
+  
+}
