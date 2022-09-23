@@ -51,6 +51,7 @@ WP* new_wp(){
 }
 void freewp(WP *wp){
   if(!(wp_pool <=wp && wp <(wp_pool+NR_WP))){
+    printf("111\n");
     assert(0);
   }
   free(wp->exp);
@@ -97,11 +98,18 @@ bool deltewp(int NO){
       break;
     }
   }
+  
     if(p==NULL){
       return false;
     }
+    if(p_1==NULL){
+      head = p->next;
+    }
+    else{
+      p_1->next=p->next;
+    }
     
-    p_1->next=p->next;
+
     
     freewp(p);
     return true;
@@ -111,6 +119,15 @@ void scan_wp(vaddr_t pc){
   WP *p;
   for (p = head; p != NULL; p=p->next)
   {
+    bool success;
+    word_t  newval=expr(p->exp,&success);
+    if (p->lastval!=newval){
+      printf("hint wp %d at pc: " FMT_WORD",expr = %s\n",p->NO,pc,p->exp);
+      printf("old val = "FMT_WORD"\nnew val = "FMT_WORD "\n",p->lastval,newval);
+      p->lastval = newval;
+      nemu_state.state=NEMU_STOP;
+      return;
+    }
     ;
   }
   

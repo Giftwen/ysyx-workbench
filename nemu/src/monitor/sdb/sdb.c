@@ -78,7 +78,9 @@ static int cmd_d(char *args){
   }
   else{
     int NO;
+    
     sscanf(args,"%d",&NO);
+    
     bool s=deltewp(NO);
     if(!s){
       printf("W%d DONT EXIT!!\n",NO);
