@@ -19,6 +19,25 @@
 #include <locale.h>
 #include <isa.h>
 
+
+
+
+
+#define BUFF_MAX_LEN 128*10
+
+
+char *pHead = NULL;			//环形缓冲区首地址
+char *pValidRead = NULL;	//已使用环形缓冲区首地址
+char *pValidWrite = NULL;	//已使用环形缓冲区尾地址
+char *pTail = NULL;			//环形缓冲区尾地址
+void InitRingBuff();
+void FreeRingBuff();
+int WriteRingBuff(char *pBuff, int AddLen);
+void ReadRingBuff();
+
+
+
+
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
  * This is useful when you use the `si' command.
@@ -41,7 +60,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   scan_wp(_this->pc);
 }
-
+static void itrace(Decode *_this, vaddr_t dnpc) {
+        WriteRingBuff(_this->logbuf, 128);
+}
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
@@ -49,12 +70,14 @@ static void exec_once(Decode *s, vaddr_t pc) {
   cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
-  p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
+  p += snprintf(p, sizeof(s->logbuf),"   " FMT_WORD ":", s->pc);
   int ilen = s->snpc - s->pc;
   int i;
   uint8_t *inst = (uint8_t *)&s->isa.inst.val;
   for (i = ilen - 1; i >= 0; i --) {
+    //printf("1234\n");
     p += snprintf(p, 4, " %02x", inst[i]);
+    //printf("5678\n");
   }
   int ilen_max = MUXDEF(CONFIG_ISA_x86, 8, 4);
   int space_len = ilen_max - ilen;
@@ -71,11 +94,13 @@ static void exec_once(Decode *s, vaddr_t pc) {
 
 static void execute(uint64_t n) {
   Decode s;
+
   for (;n > 0; n --) {
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
     trace_and_difftest(&s, cpu.pc);
-    if (nemu_state.state != NEMU_RUNNING) break;
+    itrace(&s, cpu.pc);
+    if (nemu_state.state != NEMU_RUNNING) {break;};
     IFDEF(CONFIG_DEVICE, device_update());
   }
 }
@@ -105,7 +130,7 @@ void cpu_exec(uint64_t n) {
   }
 
   uint64_t timer_start = get_time();
-
+  InitRingBuff();
   execute(n);
 
   uint64_t timer_end = get_time();
@@ -115,6 +140,11 @@ void cpu_exec(uint64_t n) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
 
     case NEMU_END: case NEMU_ABORT:
+    if(nemu_state.state == NEMU_ABORT){
+      	
+      ReadRingBuff();  
+      FreeRingBuff();
+    }
       Log("nemu: %s at pc = " FMT_WORD,
           (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
            (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
@@ -124,3 +154,66 @@ void cpu_exec(uint64_t n) {
     case NEMU_QUIT: statistic();
   }
 }
+
+
+
+
+
+
+//环形缓冲区初始化
+void InitRingBuff(){
+	if(NULL == pHead){
+		pHead = (char *)malloc(BUFF_MAX_LEN * sizeof(char));
+	}
+	memset(pHead, 0 , sizeof(BUFF_MAX_LEN));
+	pValidRead = pHead;
+	pValidWrite = pHead;
+	pTail = pHead + BUFF_MAX_LEN;  
+}
+
+//环形缓冲区释放
+void FreeRingBuff(){
+	if(NULL != pHead){
+		free(pHead);
+	}
+}
+
+//向缓冲区写数据
+int WriteRingBuff(char *pBuff, int AddLen)
+{
+	if(NULL == pHead){
+		return -1;
+	}
+	if(AddLen > pTail - pHead){
+		return -1;
+	}
+	if(pValidWrite + AddLen > pTail){
+		int PreLen = pTail - pValidWrite;
+		int LastLen = AddLen - PreLen;
+		memcpy(pValidWrite, pBuff, PreLen);	
+		memcpy(pHead, pBuff + PreLen, LastLen);
+    //pValidRead=pHead + LastLen;
+		pValidWrite = pHead + LastLen;	//新环形缓冲区尾地址
+    pValidRead= pValidWrite;
+	}
+	else{
+		memcpy(pValidWrite, pBuff, AddLen);	//将新数据内容添加到缓冲区
+		pValidWrite += AddLen;	//新的有效数据尾地址
+    pValidRead= pValidWrite;
+	}
+	return 0;
+}
+
+//从缓冲区读数据
+void ReadRingBuff(){
+	char *pHead_r =pValidRead;
+  memcpy(pValidWrite-128, "->", 2);
+      for(int i=0;i<10;i++){
+          puts(pHead_r);
+          pHead_r+=128;
+          if(pHead_r==pTail){pHead_r=pHead;}
+      }
+}
+
+
+
