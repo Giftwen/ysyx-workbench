@@ -1,15 +1,51 @@
-  #include "Vtop.h"
+/*
+ * @Author: WenJiaBao-2022E8020282071
+ * @Date: 2022-09-22 10:58:30
+ * @LastEditTime: 2022-10-08 20:35:38
+ * @Description: 
+ * 
+ * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
+ */
+  #include "Vysyx_22050058_top.h"
   #include "verilated.h"
   #include "verilated_vcd_c.h"
   #include <stdio.h>
   #include <stdlib.h>
   #include <assert.h>
+  #include "svdpi.h"
+  #include "verilated_dpi.h"
+
+
+uint64_t  checkstopVAL ;
+uint64_t  thispc       ;
+extern "C" int checkdpicstop(const svLogicVec32* r) {
+  checkstopVAL=*(uint64_t*)r;
+  return 0;
+}
+extern "C" int checkdpicpc(const svLogicVec32* r) {
+  thispc=*(uint64_t*)r;
+  return 0;
+}
+
+uint64_t *cpu_gpr = NULL;
+extern "C" void set_gpr_ptr(const svOpenArrayHandle r) {
+  cpu_gpr = (uint64_t *)(((VerilatedDpiOpenVar*)r)->datap());
+}
+void dump_gpr() {
+  int i;
+  for (i = 0; i < 32; i++) {
+    printf("gpr[%d] = 0x%lx\n", i, cpu_gpr[i]);
+  }
+}
+
+
+
 #ifdef NVBOARD_ON
   #include <nvboard.h>
 #endif
 #ifdef NVBOARD_ON
   static TOP_NAME dut;
-  void nvboard_bind_all_pins(Vtop* top);
+  void nvboard_bind_all_pins(Vysyx_22050058_top* top);
 
 // static void single_cycle() {
 //   dut.clk = 0; dut.eval();
@@ -26,8 +62,8 @@
       #ifdef SIM_ON
       VerilatedContext* contextp = new VerilatedContext;
       contextp->commandArgs(argc, argv);
-      Vtop* top = new Vtop{contextp};
-      int cycle_num=66;
+      Vysyx_22050058_top* top = new Vysyx_22050058_top{contextp};
+      int cycle_num=200;
       uint64_t limit = cycle_num;
       #endif
       
@@ -53,21 +89,29 @@
       }
       #endif
       #ifdef SIM_ON
-      while(contextp->time() < limit && !contextp->gotFinish()){
-        int a = rand() & 1;
-        int b = rand() & 1;
-        top->a = a;
-        top->b = b;
+      while( contextp->time()>10000&&!contextp->gotFinish()){
+        
+        top->clk =0;
+        if(contextp->time()<10){top->rst =1;}else{top->rst =0;}
         contextp->timeInc(1);
         top->eval();
-        assert((top->f )== (a ^ b));
-        
-        //printf("a = %d, b = %d, f = %d\n", a, b, top->f);
+        #ifdef TRACE_ON
+            tfp->dump(cycle++);
+        #endif
+        if (checkstopVAL){
+          printf("\nthis is ebreak pc: 0x%lx\n",thispc);
+          break;
+        }
+        top->clk =1;
+        top->eval();
         #ifdef TRACE_ON
             tfp->dump(cycle++);
         #endif
         
+        
       }
+      //printf("\ncycle is %ld\n",contextp->time());
+      //dump_gpr();
       #endif
       #ifdef TRACE_ON
         tfp->close();

@@ -1,4 +1,4 @@
-
+$(shell find $(abspath ./vsrc) -name "*.v" > ./filelist_all.f)
 VSRC = $(shell cat ./filelist_all.f)
 #V2F = $( if [ -f $(path) ]; then  vcd2fsdb npc_sim.vcd ./obj_dir/npc_sim.vcd; fi; )
 path = ./obj_dir/npc_sim.vcd
@@ -57,13 +57,13 @@ run: $(BIN)
 ################################################################################
 all: $(VSRC)
 	verilator  -cc -exe --build +define+USE_RF_DEBUG+SNPS_FAST_SIM_FFV  main.cpp $^ -top-module top --trace -CFLAGS "$(CPPFLAGS)"  -Wno-WIDTH -Wno-CMPCONST -Wno-REDEFMACRO --timescale-override 1ns/1ps
-	-./obj_dir/Vtop  
+	-./obj_dir/Vysyx_22050058_top  
 
 
 
 sim: $(VSRC)
-	verilator  -cc -exe --build -Wall  ./csrc/main.cpp $^ -top-module top --trace -CFLAGS "$(CPPFLAGS) -DSIM_ON "  -Wno-WIDTH -Wno-CMPCONST -Wno-REDEFMACRO --timescale-override 1ns/1ps
-	-./obj_dir/Vtop
+	verilator  -cc -exe --build -Wall  ./csrc/main.cpp $^ -top-module ysyx_22050058_top --trace -CFLAGS "$(CPPFLAGS) -DSIM_ON "  -Wno-WIDTH -Wno-CMPCONST -Wno-UNDRIVEN -Wno-REDEFMACRO -Wno-UNUSED -Wno-IGNOREDRETURN --timescale-override 1ns/1ps
+	-./obj_dir/Vysyx_22050058_top
 
 
 v2f: 
@@ -73,7 +73,7 @@ verdi: $(VSRC)
 	verdi -f ./filelist_top.f -ssf ./obj_dir/npc_sim.vcd.fsdb &
 
 clean:
-	rm -rf ./obj_dir verdilog novas.* vcd2fsdbLog $(BUILD_DIR)
+	rm -rf ./obj_dir verdiLog novas.* vcd2fsdbLog $(BUILD_DIR)
 
 default: all 
 
