@@ -23,20 +23,15 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 
 void itoa(unsigned int n, char * buf)
 {
-        int i;
-        
-        if(n < 10)
-        {
-                buf[0] = n + '0';
-                buf[1] = '\0';
-                return;
+        int i;  
+        if(n < 10){
+            buf[0] = n + '0';
+            buf[1] = '\0';
+            return;
         }
         itoa(n / 10, buf);
-
         for(i=0; buf[i]!='\0'; i++);
-        
         buf[i] = (n % 10) + '0';
-        
         buf[i+1] = '\0';
 }
 
