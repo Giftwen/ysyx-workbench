@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-27 00:11:49
- * @LastEditTime: 2022-10-08 20:31:15
+ * @LastEditTime: 2022-10-14 20:07:08
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -10,16 +10,22 @@
  module ysyx_22050058_pipeline(
     input   wire                                    clk,
     input   wire                                    rst,
+    input   wire    [`ysyx_22050058_InstAdderBus]   pipeline_thispc_i,
     input   wire    [`ysyx_22050058_InstBus]        pipeline_inst_i,
     output  reg                                     pipeline_ce_o,
     output  reg     [`ysyx_22050058_InstAdderBus]   pipeline_pc_o,
+
+    //Interface with CtrlBlock
+    output   wire    [5:0]                           stall,
+    output   wire    [5:0]                           flush,
+
     // Interface with DPI-C
     output  reg                                     pipeline_dpic_stop_o
 
  );
     //Interface with ControlBlock
-    wire     [5:0]                           stall;
-    wire     [5:0]                           flush;
+    // wire     [5:0]                           stall;
+    // wire     [5:0]                           flush;
     wire                                     stall_exreq_w;
     wire                                     stall_idreq_w;
     wire                                     isjump_w;
@@ -135,7 +141,7 @@ import "DPI-C" function int checkdpicpc(input reg[63:0] dpic_o);
         .stall          (stall),
         .flush          (flush),
         //Interface with PCreg
-        .if_pc_i        (pipeline_pc_o),
+        .if_pc_i        (pipeline_thispc_i),
         .if_inst_i      (pipeline_inst_i),
         //Interface with IDstage
         .id_pc_o        (id_pc_r),

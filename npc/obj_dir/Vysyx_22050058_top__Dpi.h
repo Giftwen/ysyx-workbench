@@ -13,10 +13,12 @@ extern "C" {
 
 
     // DPI IMPORTS
-    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_pipeline.v:90:29
+    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_pipeline.v:96:29
     extern int checkdpicpc(const svLogicVecVal* dpic_o);
-    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_top.v:21:29
+    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_top.v:22:29
     extern int checkdpicstop(const svLogicVecVal* dpic_o);
+    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_inst_rom.v:24:31
+    extern void pmem_read(long long inst_raddr, long long* inst);
     // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_regfile.v:30:30
     extern void set_gpr_ptr(const svOpenArrayHandle a);
 

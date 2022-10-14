@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-26 11:09:44
- * @LastEditTime: 2022-10-08 20:30:33
+ * @LastEditTime: 2022-10-15 02:09:00
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -672,7 +672,7 @@
                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP; 
             end
             `ysyx_22050058_INST_AUIPC   : begin//xxx
-                id_aluop_o          =       `ysyx_22050058_ALU_ADD_OP;
+                id_aluop_o          =       `ysyx_22050058_ALU_AUIPC_OP;
                 id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
                 id_we_o             =       `ysyx_22050058_WriteEnable;
                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
@@ -685,7 +685,7 @@
                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP; 
             end
             `ysyx_22050058_INST_LUI :   begin
-                id_aluop_o          =       `ysyx_22050058_ALU_ADD_OP;
+                id_aluop_o          =       `ysyx_22050058_ALU_LUI_OP;
                 id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
                 id_we_o             =       `ysyx_22050058_WriteEnable;
                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;

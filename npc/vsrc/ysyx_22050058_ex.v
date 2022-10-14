@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-26 11:10:02
- * @LastEditTime: 2022-10-08 20:31:47
+ * @LastEditTime: 2022-10-14 20:49:39
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -81,12 +81,16 @@ module  ysyx_22050058_ex(
                 ex_isjump_o           =   ex_op1_wdata_i == ex_op2_wdata_i;
                 ex_jumpaddr_o         =   ex_pc_i+ex_op3_wdata_i;
             end
+            `ysyx_22050058_ALU_BNE_OP :begin
+                ex_isjump_o           =   ex_op1_wdata_i != ex_op2_wdata_i;
+                ex_jumpaddr_o         =   ex_pc_i+ex_op3_wdata_i;
+            end
             `ysyx_22050058_ALU_BLT_OP :begin
                 ex_isjump_o           =   $signed(ex_op1_wdata_i) < $signed(ex_op2_wdata_i);
                 ex_jumpaddr_o         =   ex_pc_i+ex_op3_wdata_i;
             end
             `ysyx_22050058_ALU_BGE_OP :begin
-                ex_isjump_o           =   $signed(ex_op1_wdata_i) >= $signed(ex_op2_wdata_i);
+                ex_isjump_o           =   ~($signed(ex_op1_wdata_i) < $signed(ex_op2_wdata_i));
                 ex_jumpaddr_o         =   ex_pc_i+ex_op3_wdata_i;
             end
             `ysyx_22050058_ALU_BLTU_OP :begin

@@ -24,8 +24,8 @@ VL_MODULE(Vysyx_22050058_top___024root) {
 
     // LOCAL SIGNALS
     CData/*0:0*/ ysyx_22050058_top__DOT__ce;
-    CData/*5:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__stall;
-    CData/*5:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__flush;
+    CData/*5:0*/ ysyx_22050058_top__DOT__stall;
+    CData/*5:0*/ ysyx_22050058_top__DOT__flush;
     CData/*0:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__stall_idreq_w;
     CData/*0:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__isjump_w;
     CData/*0:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg1_re_w;
@@ -49,8 +49,11 @@ VL_MODULE(Vysyx_22050058_top___024root) {
     CData/*4:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_reg_waddr_r;
     CData/*0:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_we_r;
     CData/*0:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_id_u0__DOT__id_instvalid;
+    IData/*31:0*/ ysyx_22050058_top__DOT__inst;
     IData/*31:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r;
     QData/*63:0*/ ysyx_22050058_top__DOT__pc;
+    QData/*63:0*/ ysyx_22050058_top__DOT__thispc;
+    QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_inst_rom__DOT__inst_line;
     QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__jumpaddr_w;
     QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_pc_r;
     QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_pc_r;
@@ -66,7 +69,6 @@ VL_MODULE(Vysyx_22050058_top___024root) {
     QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_ex_u0__DOT__arithmeticres;
     QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_ex_u0__DOT__logices;
     QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_ex_u0__DOT__ex_wdata_r;
-    VlUnpacked<IData/*31:0*/, 4294> ysyx_22050058_top__DOT__ysyx_22050058_inst_rom__DOT__inst_mem;
     VlUnpacked<QData/*63:0*/, 32> ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs;
 
     // LOCAL VARIABLES

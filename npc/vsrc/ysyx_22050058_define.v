@@ -1,7 +1,7 @@
 /*
  * @Author: ysyx_22050058_wenjiabao
  * @Date: 2022-09-26 11:11:53
- * @LastEditTime: 2022-10-08 20:26:57
+ * @LastEditTime: 2022-10-14 21:10:19
  * @Description: define file for ysyx_22050058
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -33,7 +33,7 @@
 `define ysyx_22050058_FlushEnable       1'b1
 `define ysyx_22050058_FlushDisable      1'b0
 `define ysyx_22050058_IsJump            1'b1
-`define ysyx_22050058_NoJump            1'b1
+`define ysyx_22050058_NoJump            1'b0
 `define ysyx_22050058_RegBUS            63:0
 `define ysyx_22050058_RegAddrBus        4:0
 `define ysyx_22050058_RegBUSNum         6
@@ -41,14 +41,15 @@
 
 `define ysyx_22050058_InstAdderBus      63:0
 `define ysyx_22050058_InstBus           31:0
-`define ysyx_22050058_InstAdderBusNum   6
+`define ysyx_22050058_InstLen           32
+`define ysyx_22050058_InstAdderBusNum   64
 `define ysyx_22050058_RegNum            32
 `define ysyx_22050058_RegNumLog2        5
 `define ysyx_22050058_InstMemNum        4294
 `define ysyx_22050058_InstMemNumLog2    31
 
 `define ysyx_22050058_ZeroWord          `ysyx_22050058_RegBUSNum'b0
-`define ysyx_22050058_RstVector         `ysyx_22050058_InstAdderBusNum'b0
+`define ysyx_22050058_RstVector         `ysyx_22050058_InstAdderBusNum'h80000000
 `define ysyx_22050058_NOP_REG_Addr      `ysyx_22050058_RegBUSNum'b0
 
 `define ysyx_22050058_DPICNOSTOP        1'b0
@@ -133,7 +134,7 @@
 `define ysyx_22050058_INST_SRLW                  7'b0000000
 `define ysyx_22050058_INST_SRAW                  7'b0100000
 //*******Instruction Funct12********//
-`define ysyx_22050058_INST_EBREAK                12'b000000000000
+`define ysyx_22050058_INST_EBREAK                12'b000000000001
 
 
 //***********************AluOpcode***********************//

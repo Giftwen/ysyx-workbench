@@ -1,7 +1,7 @@
 /*
  * @Author: ysyx_22050058_wenjiabao
  * @Date: 2022-09-26 11:11:41
- * @LastEditTime: 2022-10-08 19:16:48
+ * @LastEditTime: 2022-10-14 15:25:09
  * @Description: pc_reg
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -32,12 +32,12 @@ module ysyx_22050058_pc_reg(
 
     always @(posedge clk ) begin
         if (ce== `ysyx_22050058_ChipDisable) begin
-            pc  <=  pc;
+            pc  <=  `ysyx_22050058_RstVector;
         end else if (stall[0] == `ysyx_22050058_StallEnable)begin
             pc  <=  pc;
         end else begin
             if(isjump==`ysyx_22050058_IsJump)begin
-                pc  <=  jumpaddr;
+                pc  <=  jumpaddr ;
             end else begin
                 pc  <=  pc + `ysyx_22050058_RegBUSNum'h4;
             end
