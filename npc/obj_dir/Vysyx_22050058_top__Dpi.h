@@ -13,7 +13,17 @@ extern "C" {
 
 
     // DPI IMPORTS
-    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_pipeline.v:96:29
+    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_pipeline.v:115:29
+    extern int bypassregfileaddr(const svLogicVecVal* dpic_o);
+    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_pipeline.v:114:29
+    extern int bypassregfiledata(const svLogicVecVal* dpic_o);
+    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_pipeline.v:113:29
+    extern int bypassregfilewe(const svLogicVecVal* dpic_o);
+    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_pipeline.v:112:29
+    extern int checkdpicdnpc(const svLogicVecVal* dpic_o);
+    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_pipeline.v:116:29
+    extern int checkdpicinstvaild(const svLogicVecVal* dpic_o);
+    // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_pipeline.v:111:29
     extern int checkdpicpc(const svLogicVecVal* dpic_o);
     // DPI import at /home/gift/workplace/ysyx-workbench/npc/vsrc/ysyx_22050058_top.v:22:29
     extern int checkdpicstop(const svLogicVecVal* dpic_o);

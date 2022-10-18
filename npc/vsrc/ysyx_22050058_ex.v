@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-26 11:10:02
- * @LastEditTime: 2022-10-14 20:49:39
+ * @LastEditTime: 2022-10-18 01:42:05
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -11,7 +11,9 @@ module  ysyx_22050058_ex(
     
     //Interface with IDstage
     input   wire    [`ysyx_22050058_InstAdderBus]   ex_pc_i,
+    input   wire    [`ysyx_22050058_InstAdderBus]   ex_dnpc_i,
     input   wire                                    ex_dpicstop_i,
+    input   wire                                    ex_instvalid_i,
     input   wire    [`ysyx_22050058_AluOpBus]       ex_aluop_i,
     input   wire    [`ysyx_22050058_AluSelBus]      ex_alusel_i,
     input   wire    [`ysyx_22050058_RegBUS]         ex_op1_wdata_i,
@@ -25,7 +27,9 @@ module  ysyx_22050058_ex(
     output  reg     [`ysyx_22050058_InstAdderBus]   ex_jumpaddr_o,
     //Interface with MemStage
     output  reg     [`ysyx_22050058_InstAdderBus]   ex_pc_o,
+    output  reg     [`ysyx_22050058_InstAdderBus]   ex_dnpc_o,
     output  reg                                     ex_dpicstop_o,
+    output  reg                                     ex_instvalid_o,
     output  reg     [`ysyx_22050058_RegAddrBus]     ex_reg_waddr_o,
     output  reg                                     ex_we_o,
     output  reg     [`ysyx_22050058_RegBUS]         ex_wdata_o
@@ -38,6 +42,13 @@ module  ysyx_22050058_ex(
     always @(*) begin
         ex_pc_o             =   ex_pc_i;
         ex_dpicstop_o       =   ex_dpicstop_i;
+        ex_instvalid_o      =   ex_instvalid_i;
+        if(ex_isjump_o)begin
+            ex_dnpc_o       =   ex_jumpaddr_o;
+        end else begin
+            ex_dnpc_o       =   ex_dnpc_i;
+        end
+        
     end
 
     always @(*) begin

@@ -22,188 +22,213 @@ void Vysyx_22050058_top___024root__traceInitSub0(Vysyx_22050058_top___024root* v
     if (false && tracep && c) {}  // Prevent unused
     // Body
     {
-        tracep->declBit(c+141,"clk", false,-1);
-        tracep->declBit(c+142,"rst", false,-1);
-        tracep->declBit(c+141,"ysyx_22050058_top clk", false,-1);
-        tracep->declBit(c+142,"ysyx_22050058_top rst", false,-1);
+        tracep->declBit(c+154,"clk", false,-1);
+        tracep->declBit(c+155,"rst", false,-1);
+        tracep->declBit(c+154,"ysyx_22050058_top clk", false,-1);
+        tracep->declBit(c+155,"ysyx_22050058_top rst", false,-1);
         tracep->declBit(c+1,"ysyx_22050058_top ce", false,-1);
         tracep->declQuad(c+2,"ysyx_22050058_top pc", false,-1, 63,0);
         tracep->declQuad(c+4,"ysyx_22050058_top thispc", false,-1, 63,0);
         tracep->declBus(c+6,"ysyx_22050058_top inst", false,-1, 31,0);
         tracep->declBit(c+7,"ysyx_22050058_top dpic_stop", false,-1);
-        tracep->declBus(c+143,"ysyx_22050058_top stall", false,-1, 5,0);
-        tracep->declBus(c+144,"ysyx_22050058_top flush", false,-1, 5,0);
-        tracep->declBit(c+141,"ysyx_22050058_top ysyx_22050058_inst_rom clk", false,-1);
-        tracep->declBit(c+142,"ysyx_22050058_top ysyx_22050058_inst_rom rst", false,-1);
+        tracep->declBus(c+156,"ysyx_22050058_top stall", false,-1, 5,0);
+        tracep->declBus(c+157,"ysyx_22050058_top flush", false,-1, 5,0);
+        tracep->declBit(c+154,"ysyx_22050058_top ysyx_22050058_inst_rom clk", false,-1);
+        tracep->declBit(c+155,"ysyx_22050058_top ysyx_22050058_inst_rom rst", false,-1);
         tracep->declBit(c+1,"ysyx_22050058_top ysyx_22050058_inst_rom ce", false,-1);
-        tracep->declBus(c+143,"ysyx_22050058_top ysyx_22050058_inst_rom stall", false,-1, 5,0);
-        tracep->declBus(c+144,"ysyx_22050058_top ysyx_22050058_inst_rom flush", false,-1, 5,0);
+        tracep->declBus(c+156,"ysyx_22050058_top ysyx_22050058_inst_rom stall", false,-1, 5,0);
+        tracep->declBus(c+157,"ysyx_22050058_top ysyx_22050058_inst_rom flush", false,-1, 5,0);
         tracep->declQuad(c+2,"ysyx_22050058_top ysyx_22050058_inst_rom addr", false,-1, 63,0);
         tracep->declQuad(c+4,"ysyx_22050058_top ysyx_22050058_inst_rom thispc", false,-1, 63,0);
         tracep->declBus(c+6,"ysyx_22050058_top ysyx_22050058_inst_rom inst", false,-1, 31,0);
         tracep->declQuad(c+8,"ysyx_22050058_top ysyx_22050058_inst_rom inst_line", false,-1, 63,0);
-        tracep->declBit(c+141,"ysyx_22050058_top ysyx_22050058_pipeline clk", false,-1);
-        tracep->declBit(c+142,"ysyx_22050058_top ysyx_22050058_pipeline rst", false,-1);
+        tracep->declBit(c+154,"ysyx_22050058_top ysyx_22050058_pipeline clk", false,-1);
+        tracep->declBit(c+155,"ysyx_22050058_top ysyx_22050058_pipeline rst", false,-1);
         tracep->declQuad(c+4,"ysyx_22050058_top ysyx_22050058_pipeline pipeline_thispc_i", false,-1, 63,0);
         tracep->declBus(c+6,"ysyx_22050058_top ysyx_22050058_pipeline pipeline_inst_i", false,-1, 31,0);
         tracep->declBit(c+1,"ysyx_22050058_top ysyx_22050058_pipeline pipeline_ce_o", false,-1);
         tracep->declQuad(c+2,"ysyx_22050058_top ysyx_22050058_pipeline pipeline_pc_o", false,-1, 63,0);
-        tracep->declBus(c+143,"ysyx_22050058_top ysyx_22050058_pipeline stall", false,-1, 5,0);
-        tracep->declBus(c+144,"ysyx_22050058_top ysyx_22050058_pipeline flush", false,-1, 5,0);
+        tracep->declBus(c+156,"ysyx_22050058_top ysyx_22050058_pipeline stall", false,-1, 5,0);
+        tracep->declBus(c+157,"ysyx_22050058_top ysyx_22050058_pipeline flush", false,-1, 5,0);
         tracep->declBit(c+7,"ysyx_22050058_top ysyx_22050058_pipeline pipeline_dpic_stop_o", false,-1);
-        tracep->declBit(c+153,"ysyx_22050058_top ysyx_22050058_pipeline stall_exreq_w", false,-1);
-        tracep->declBit(c+154,"ysyx_22050058_top ysyx_22050058_pipeline stall_idreq_w", false,-1);
+        tracep->declBit(c+166,"ysyx_22050058_top ysyx_22050058_pipeline stall_exreq_w", false,-1);
+        tracep->declBit(c+167,"ysyx_22050058_top ysyx_22050058_pipeline stall_idreq_w", false,-1);
         tracep->declBit(c+10,"ysyx_22050058_top ysyx_22050058_pipeline isjump_w", false,-1);
         tracep->declQuad(c+11,"ysyx_22050058_top ysyx_22050058_pipeline jumpaddr_w", false,-1, 63,0);
         tracep->declBus(c+13,"ysyx_22050058_top ysyx_22050058_pipeline id_inst_r", false,-1, 31,0);
         tracep->declQuad(c+14,"ysyx_22050058_top ysyx_22050058_pipeline id_pc_r", false,-1, 63,0);
-        tracep->declQuad(c+145,"ysyx_22050058_top ysyx_22050058_pipeline id_reg1_rdata_r", false,-1, 63,0);
-        tracep->declQuad(c+147,"ysyx_22050058_top ysyx_22050058_pipeline id_reg2_rdata_r", false,-1, 63,0);
-        tracep->declBit(c+16,"ysyx_22050058_top ysyx_22050058_pipeline id_reg1_re_w", false,-1);
-        tracep->declBit(c+17,"ysyx_22050058_top ysyx_22050058_pipeline id_reg2_re_w", false,-1);
-        tracep->declBus(c+18,"ysyx_22050058_top ysyx_22050058_pipeline id_reg1_raddr_w", false,-1, 4,0);
-        tracep->declBus(c+19,"ysyx_22050058_top ysyx_22050058_pipeline id_reg2_raddr_w", false,-1, 4,0);
+        tracep->declQuad(c+16,"ysyx_22050058_top ysyx_22050058_pipeline id_dnpc_r", false,-1, 63,0);
+        tracep->declQuad(c+158,"ysyx_22050058_top ysyx_22050058_pipeline id_reg1_rdata_r", false,-1, 63,0);
+        tracep->declQuad(c+160,"ysyx_22050058_top ysyx_22050058_pipeline id_reg2_rdata_r", false,-1, 63,0);
+        tracep->declBit(c+18,"ysyx_22050058_top ysyx_22050058_pipeline id_reg1_re_w", false,-1);
+        tracep->declBit(c+19,"ysyx_22050058_top ysyx_22050058_pipeline id_reg2_re_w", false,-1);
+        tracep->declBus(c+20,"ysyx_22050058_top ysyx_22050058_pipeline id_reg1_raddr_w", false,-1, 4,0);
+        tracep->declBus(c+21,"ysyx_22050058_top ysyx_22050058_pipeline id_reg2_raddr_w", false,-1, 4,0);
         tracep->declQuad(c+14,"ysyx_22050058_top ysyx_22050058_pipeline id_pc_w", false,-1, 63,0);
-        tracep->declBit(c+20,"ysyx_22050058_top ysyx_22050058_pipeline id_dpicstop_w", false,-1);
-        tracep->declBus(c+21,"ysyx_22050058_top ysyx_22050058_pipeline id_aluop_w", false,-1, 7,0);
-        tracep->declBus(c+22,"ysyx_22050058_top ysyx_22050058_pipeline id_alusel_w", false,-1, 2,0);
-        tracep->declQuad(c+149,"ysyx_22050058_top ysyx_22050058_pipeline id_op1_wdata_w", false,-1, 63,0);
-        tracep->declQuad(c+151,"ysyx_22050058_top ysyx_22050058_pipeline id_op2_wdata_w", false,-1, 63,0);
-        tracep->declQuad(c+23,"ysyx_22050058_top ysyx_22050058_pipeline id_op3_wdata_w", false,-1, 63,0);
-        tracep->declBus(c+25,"ysyx_22050058_top ysyx_22050058_pipeline id_reg_waddr_w", false,-1, 4,0);
-        tracep->declBit(c+26,"ysyx_22050058_top ysyx_22050058_pipeline id_we_w", false,-1);
-        tracep->declQuad(c+27,"ysyx_22050058_top ysyx_22050058_pipeline ex_pc_r", false,-1, 63,0);
-        tracep->declBit(c+29,"ysyx_22050058_top ysyx_22050058_pipeline ex_dpicstop_r", false,-1);
-        tracep->declBus(c+30,"ysyx_22050058_top ysyx_22050058_pipeline ex_aluop_r", false,-1, 7,0);
-        tracep->declBus(c+31,"ysyx_22050058_top ysyx_22050058_pipeline ex_alusel_r", false,-1, 2,0);
-        tracep->declQuad(c+32,"ysyx_22050058_top ysyx_22050058_pipeline ex_op1_wdata_r", false,-1, 63,0);
-        tracep->declQuad(c+34,"ysyx_22050058_top ysyx_22050058_pipeline ex_op2_wdata_r", false,-1, 63,0);
-        tracep->declQuad(c+36,"ysyx_22050058_top ysyx_22050058_pipeline ex_op3_wdata_r", false,-1, 63,0);
-        tracep->declBus(c+38,"ysyx_22050058_top ysyx_22050058_pipeline ex_reg_waddr_r", false,-1, 4,0);
-        tracep->declBit(c+39,"ysyx_22050058_top ysyx_22050058_pipeline ex_we_r", false,-1);
-        tracep->declQuad(c+27,"ysyx_22050058_top ysyx_22050058_pipeline ex_pc_w", false,-1, 63,0);
-        tracep->declBit(c+29,"ysyx_22050058_top ysyx_22050058_pipeline ex_dpicstop_w", false,-1);
-        tracep->declBus(c+38,"ysyx_22050058_top ysyx_22050058_pipeline ex_reg_waddr_w", false,-1, 4,0);
-        tracep->declBit(c+39,"ysyx_22050058_top ysyx_22050058_pipeline ex_we_w", false,-1);
-        tracep->declQuad(c+40,"ysyx_22050058_top ysyx_22050058_pipeline ex_wdata_w", false,-1, 63,0);
-        tracep->declQuad(c+42,"ysyx_22050058_top ysyx_22050058_pipeline mem_pc_r", false,-1, 63,0);
-        tracep->declBit(c+44,"ysyx_22050058_top ysyx_22050058_pipeline mem_dpicstop_r", false,-1);
-        tracep->declBus(c+45,"ysyx_22050058_top ysyx_22050058_pipeline mem_reg_waddr_r", false,-1, 4,0);
-        tracep->declBit(c+46,"ysyx_22050058_top ysyx_22050058_pipeline mem_we_r", false,-1);
-        tracep->declQuad(c+47,"ysyx_22050058_top ysyx_22050058_pipeline mem_wdata_r", false,-1, 63,0);
-        tracep->declQuad(c+42,"ysyx_22050058_top ysyx_22050058_pipeline mem_pc_w", false,-1, 63,0);
-        tracep->declBit(c+44,"ysyx_22050058_top ysyx_22050058_pipeline mem_dpicstop_w", false,-1);
-        tracep->declBus(c+45,"ysyx_22050058_top ysyx_22050058_pipeline mem_reg_waddr_w", false,-1, 4,0);
-        tracep->declBit(c+46,"ysyx_22050058_top ysyx_22050058_pipeline mem_we_w", false,-1);
-        tracep->declQuad(c+47,"ysyx_22050058_top ysyx_22050058_pipeline mem_wdata_w", false,-1, 63,0);
-        tracep->declQuad(c+49,"ysyx_22050058_top ysyx_22050058_pipeline wb_pc_r", false,-1, 63,0);
+        tracep->declQuad(c+16,"ysyx_22050058_top ysyx_22050058_pipeline id_dnpc_w", false,-1, 63,0);
+        tracep->declBit(c+22,"ysyx_22050058_top ysyx_22050058_pipeline id_dpicstop_w", false,-1);
+        tracep->declBus(c+23,"ysyx_22050058_top ysyx_22050058_pipeline id_aluop_w", false,-1, 7,0);
+        tracep->declBus(c+24,"ysyx_22050058_top ysyx_22050058_pipeline id_alusel_w", false,-1, 2,0);
+        tracep->declQuad(c+162,"ysyx_22050058_top ysyx_22050058_pipeline id_op1_wdata_w", false,-1, 63,0);
+        tracep->declQuad(c+164,"ysyx_22050058_top ysyx_22050058_pipeline id_op2_wdata_w", false,-1, 63,0);
+        tracep->declQuad(c+25,"ysyx_22050058_top ysyx_22050058_pipeline id_op3_wdata_w", false,-1, 63,0);
+        tracep->declBus(c+27,"ysyx_22050058_top ysyx_22050058_pipeline id_reg_waddr_w", false,-1, 4,0);
+        tracep->declBit(c+28,"ysyx_22050058_top ysyx_22050058_pipeline id_we_w", false,-1);
+        tracep->declBit(c+29,"ysyx_22050058_top ysyx_22050058_pipeline id_instvalid_w", false,-1);
+        tracep->declQuad(c+30,"ysyx_22050058_top ysyx_22050058_pipeline ex_pc_r", false,-1, 63,0);
+        tracep->declQuad(c+32,"ysyx_22050058_top ysyx_22050058_pipeline ex_dnpc_r", false,-1, 63,0);
+        tracep->declBit(c+34,"ysyx_22050058_top ysyx_22050058_pipeline ex_dpicstop_r", false,-1);
+        tracep->declBus(c+35,"ysyx_22050058_top ysyx_22050058_pipeline ex_aluop_r", false,-1, 7,0);
+        tracep->declBus(c+36,"ysyx_22050058_top ysyx_22050058_pipeline ex_alusel_r", false,-1, 2,0);
+        tracep->declQuad(c+37,"ysyx_22050058_top ysyx_22050058_pipeline ex_op1_wdata_r", false,-1, 63,0);
+        tracep->declQuad(c+39,"ysyx_22050058_top ysyx_22050058_pipeline ex_op2_wdata_r", false,-1, 63,0);
+        tracep->declQuad(c+41,"ysyx_22050058_top ysyx_22050058_pipeline ex_op3_wdata_r", false,-1, 63,0);
+        tracep->declBus(c+43,"ysyx_22050058_top ysyx_22050058_pipeline ex_reg_waddr_r", false,-1, 4,0);
+        tracep->declBit(c+44,"ysyx_22050058_top ysyx_22050058_pipeline ex_we_r", false,-1);
+        tracep->declBit(c+45,"ysyx_22050058_top ysyx_22050058_pipeline ex_instvalid_r", false,-1);
+        tracep->declQuad(c+30,"ysyx_22050058_top ysyx_22050058_pipeline ex_pc_w", false,-1, 63,0);
+        tracep->declQuad(c+46,"ysyx_22050058_top ysyx_22050058_pipeline ex_dnpc_w", false,-1, 63,0);
+        tracep->declBit(c+34,"ysyx_22050058_top ysyx_22050058_pipeline ex_dpicstop_w", false,-1);
+        tracep->declBit(c+45,"ysyx_22050058_top ysyx_22050058_pipeline ex_instvalid_w", false,-1);
+        tracep->declBus(c+43,"ysyx_22050058_top ysyx_22050058_pipeline ex_reg_waddr_w", false,-1, 4,0);
+        tracep->declBit(c+44,"ysyx_22050058_top ysyx_22050058_pipeline ex_we_w", false,-1);
+        tracep->declQuad(c+48,"ysyx_22050058_top ysyx_22050058_pipeline ex_wdata_w", false,-1, 63,0);
+        tracep->declQuad(c+50,"ysyx_22050058_top ysyx_22050058_pipeline mem_pc_r", false,-1, 63,0);
+        tracep->declQuad(c+52,"ysyx_22050058_top ysyx_22050058_pipeline mem_dnpc_r", false,-1, 63,0);
+        tracep->declBit(c+54,"ysyx_22050058_top ysyx_22050058_pipeline mem_dpicstop_r", false,-1);
+        tracep->declBit(c+55,"ysyx_22050058_top ysyx_22050058_pipeline mem_instvalid_r", false,-1);
+        tracep->declBus(c+56,"ysyx_22050058_top ysyx_22050058_pipeline mem_reg_waddr_r", false,-1, 4,0);
+        tracep->declBit(c+57,"ysyx_22050058_top ysyx_22050058_pipeline mem_we_r", false,-1);
+        tracep->declQuad(c+58,"ysyx_22050058_top ysyx_22050058_pipeline mem_wdata_r", false,-1, 63,0);
+        tracep->declQuad(c+50,"ysyx_22050058_top ysyx_22050058_pipeline mem_pc_w", false,-1, 63,0);
+        tracep->declQuad(c+52,"ysyx_22050058_top ysyx_22050058_pipeline mem_dnpc_w", false,-1, 63,0);
+        tracep->declBit(c+54,"ysyx_22050058_top ysyx_22050058_pipeline mem_dpicstop_w", false,-1);
+        tracep->declBit(c+55,"ysyx_22050058_top ysyx_22050058_pipeline mem_instvalid_w", false,-1);
+        tracep->declBus(c+56,"ysyx_22050058_top ysyx_22050058_pipeline mem_reg_waddr_w", false,-1, 4,0);
+        tracep->declBit(c+57,"ysyx_22050058_top ysyx_22050058_pipeline mem_we_w", false,-1);
+        tracep->declQuad(c+58,"ysyx_22050058_top ysyx_22050058_pipeline mem_wdata_w", false,-1, 63,0);
+        tracep->declQuad(c+60,"ysyx_22050058_top ysyx_22050058_pipeline wb_pc_r", false,-1, 63,0);
+        tracep->declQuad(c+62,"ysyx_22050058_top ysyx_22050058_pipeline wb_dnpc_r", false,-1, 63,0);
         tracep->declBit(c+7,"ysyx_22050058_top ysyx_22050058_pipeline wb_dpicstop_r", false,-1);
-        tracep->declBus(c+51,"ysyx_22050058_top ysyx_22050058_pipeline wb_reg_waddr_r", false,-1, 4,0);
-        tracep->declBit(c+52,"ysyx_22050058_top ysyx_22050058_pipeline wb_we_r", false,-1);
-        tracep->declQuad(c+53,"ysyx_22050058_top ysyx_22050058_pipeline wb_wdata_r", false,-1, 63,0);
-        tracep->declBit(c+141,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_pc_reg_u0 clk", false,-1);
-        tracep->declBit(c+142,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_pc_reg_u0 rst", false,-1);
+        tracep->declBit(c+64,"ysyx_22050058_top ysyx_22050058_pipeline wb_instvalid_r", false,-1);
+        tracep->declBus(c+65,"ysyx_22050058_top ysyx_22050058_pipeline wb_reg_waddr_r", false,-1, 4,0);
+        tracep->declBit(c+66,"ysyx_22050058_top ysyx_22050058_pipeline wb_we_r", false,-1);
+        tracep->declQuad(c+67,"ysyx_22050058_top ysyx_22050058_pipeline wb_wdata_r", false,-1, 63,0);
+        tracep->declBit(c+154,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_pc_reg_u0 clk", false,-1);
+        tracep->declBit(c+155,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_pc_reg_u0 rst", false,-1);
         tracep->declBit(c+10,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_pc_reg_u0 isjump", false,-1);
         tracep->declQuad(c+11,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_pc_reg_u0 jumpaddr", false,-1, 63,0);
-        tracep->declBus(c+143,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_pc_reg_u0 stall", false,-1, 5,0);
+        tracep->declBus(c+156,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_pc_reg_u0 stall", false,-1, 5,0);
         tracep->declQuad(c+2,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_pc_reg_u0 pc", false,-1, 63,0);
         tracep->declBit(c+1,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_pc_reg_u0 ce", false,-1);
-        tracep->declBit(c+142,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 rst", false,-1);
-        tracep->declBit(c+154,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 ctrl_stall_idreq_i", false,-1);
-        tracep->declBit(c+153,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 ctrl_stall_exreq_i", false,-1);
+        tracep->declBit(c+155,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 rst", false,-1);
+        tracep->declBit(c+167,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 ctrl_stall_idreq_i", false,-1);
+        tracep->declBit(c+166,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 ctrl_stall_exreq_i", false,-1);
         tracep->declBit(c+10,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 ctrl_ex_isjump", false,-1);
-        tracep->declBus(c+143,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 stall", false,-1, 5,0);
-        tracep->declBus(c+144,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 flush", false,-1, 5,0);
-        tracep->declBit(c+141,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 clk", false,-1);
-        tracep->declBit(c+142,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 rst", false,-1);
+        tracep->declBus(c+156,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 stall", false,-1, 5,0);
+        tracep->declBus(c+157,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ctrl_u0 flush", false,-1, 5,0);
+        tracep->declBit(c+154,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 clk", false,-1);
+        tracep->declBit(c+155,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 rst", false,-1);
         tracep->declQuad(c+4,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 if_pc_i", false,-1, 63,0);
+        tracep->declQuad(c+2,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 if_dnpc_i", false,-1, 63,0);
         tracep->declBus(c+6,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 if_inst_i", false,-1, 31,0);
-        tracep->declBus(c+143,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 stall", false,-1, 5,0);
-        tracep->declBus(c+144,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 flush", false,-1, 5,0);
+        tracep->declBus(c+156,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 stall", false,-1, 5,0);
+        tracep->declBus(c+157,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 flush", false,-1, 5,0);
         tracep->declQuad(c+14,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 id_pc_o", false,-1, 63,0);
+        tracep->declQuad(c+16,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 id_dnpc_o", false,-1, 63,0);
         tracep->declBus(c+13,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_if_id_u0 id_inst_o", false,-1, 31,0);
-        tracep->declBit(c+141,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile clk", false,-1);
-        tracep->declBit(c+142,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile rst", false,-1);
-        tracep->declBit(c+52,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile we_i", false,-1);
-        tracep->declBus(c+51,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile waddr_i", false,-1, 4,0);
-        tracep->declQuad(c+53,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile wdata_i", false,-1, 63,0);
-        tracep->declBit(c+16,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile re1_i", false,-1);
-        tracep->declBus(c+18,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile raddr1_i", false,-1, 4,0);
-        tracep->declQuad(c+145,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile rdata1_o", false,-1, 63,0);
-        tracep->declBit(c+17,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile re2_i", false,-1);
-        tracep->declBus(c+19,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile raddr2_i", false,-1, 4,0);
-        tracep->declQuad(c+147,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile rdata2_o", false,-1, 63,0);
+        tracep->declBit(c+154,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile clk", false,-1);
+        tracep->declBit(c+155,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile rst", false,-1);
+        tracep->declBit(c+66,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile we_i", false,-1);
+        tracep->declBus(c+65,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile waddr_i", false,-1, 4,0);
+        tracep->declQuad(c+67,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile wdata_i", false,-1, 63,0);
+        tracep->declBit(c+18,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile re1_i", false,-1);
+        tracep->declBus(c+20,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile raddr1_i", false,-1, 4,0);
+        tracep->declQuad(c+158,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile rdata1_o", false,-1, 63,0);
+        tracep->declBit(c+19,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile re2_i", false,-1);
+        tracep->declBus(c+21,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile raddr2_i", false,-1, 4,0);
+        tracep->declQuad(c+160,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile rdata2_o", false,-1, 63,0);
         {int i; for (i=0; i<32; i++) {
-                tracep->declQuad(c+55+i*2,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile gprs", true,(i+0), 63,0);}}
+                tracep->declQuad(c+69+i*2,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_regfile gprs", true,(i+0), 63,0);}}
         tracep->declQuad(c+14,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_pc_i", false,-1, 63,0);
+        tracep->declQuad(c+16,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_dnpc_i", false,-1, 63,0);
         tracep->declBus(c+13,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_inst_i", false,-1, 31,0);
-        tracep->declQuad(c+145,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg1_rdata_i", false,-1, 63,0);
-        tracep->declQuad(c+147,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg2_rdata_i", false,-1, 63,0);
-        tracep->declBit(c+16,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg1_re_o", false,-1);
-        tracep->declBit(c+17,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg2_re_o", false,-1);
-        tracep->declBus(c+18,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg1_raddr_o", false,-1, 4,0);
-        tracep->declBus(c+19,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg2_raddr_o", false,-1, 4,0);
-        tracep->declBit(c+154,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_stall_idreq_o", false,-1);
+        tracep->declQuad(c+158,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg1_rdata_i", false,-1, 63,0);
+        tracep->declQuad(c+160,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg2_rdata_i", false,-1, 63,0);
+        tracep->declBit(c+18,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg1_re_o", false,-1);
+        tracep->declBit(c+19,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg2_re_o", false,-1);
+        tracep->declBus(c+20,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg1_raddr_o", false,-1, 4,0);
+        tracep->declBus(c+21,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg2_raddr_o", false,-1, 4,0);
+        tracep->declBit(c+167,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_stall_idreq_o", false,-1);
         tracep->declQuad(c+14,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_pc_o", false,-1, 63,0);
-        tracep->declBit(c+20,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_dpicstop_o", false,-1);
-        tracep->declBus(c+21,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_aluop_o", false,-1, 7,0);
-        tracep->declBus(c+22,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_alusel_o", false,-1, 2,0);
-        tracep->declQuad(c+149,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_op1_wdata_o", false,-1, 63,0);
-        tracep->declQuad(c+151,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_op2_wdata_o", false,-1, 63,0);
-        tracep->declQuad(c+23,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_op3_wdata_o", false,-1, 63,0);
-        tracep->declBus(c+25,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg_waddr_o", false,-1, 4,0);
-        tracep->declBit(c+26,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_we_o", false,-1);
-        tracep->declBus(c+38,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_ex_reg_waddr_i", false,-1, 4,0);
-        tracep->declBit(c+39,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_ex_we_i", false,-1);
-        tracep->declQuad(c+40,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_ex_wdata_i", false,-1, 63,0);
-        tracep->declBus(c+45,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_mem_reg_waddr_i", false,-1, 4,0);
-        tracep->declBit(c+46,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_mem_we_i", false,-1);
-        tracep->declQuad(c+47,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_mem_wdata_i", false,-1, 63,0);
-        tracep->declBus(c+119,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 opcode", false,-1, 6,0);
-        tracep->declBus(c+120,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 funct3", false,-1, 2,0);
-        tracep->declBus(c+121,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 funct6", false,-1, 6,0);
-        tracep->declBus(c+122,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 funct7", false,-1, 6,0);
-        tracep->declBus(c+123,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 funct12", false,-1, 6,0);
-        tracep->declBus(c+124,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 rd", false,-1, 4,0);
-        tracep->declBus(c+125,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 zimm", false,-1, 4,0);
-        tracep->declBus(c+125,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 rs1", false,-1, 4,0);
-        tracep->declBus(c+126,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 rs2", false,-1, 4,0);
-        tracep->declBus(c+127,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 shamt", false,-1, 5,0);
-        tracep->declQuad(c+23,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_Bimm", false,-1, 63,0);
-        tracep->declQuad(c+128,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_JALimm", false,-1, 63,0);
-        tracep->declQuad(c+130,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_JALRimm", false,-1, 63,0);
-        tracep->declQuad(c+132,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_imm", false,-1, 63,0);
-        tracep->declBit(c+134,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_instvalid", false,-1);
-        tracep->declQuad(c+27,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_pc_i", false,-1, 63,0);
-        tracep->declBit(c+29,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_dpicstop_i", false,-1);
-        tracep->declBus(c+30,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_aluop_i", false,-1, 7,0);
-        tracep->declBus(c+31,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_alusel_i", false,-1, 2,0);
-        tracep->declQuad(c+32,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_op1_wdata_i", false,-1, 63,0);
-        tracep->declQuad(c+34,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_op2_wdata_i", false,-1, 63,0);
-        tracep->declQuad(c+36,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_op3_wdata_i", false,-1, 63,0);
-        tracep->declBus(c+38,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_reg_waddr_i", false,-1, 4,0);
-        tracep->declBit(c+39,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_we_i", false,-1);
-        tracep->declBit(c+153,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_stall_exreq_o", false,-1);
+        tracep->declQuad(c+16,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_dnpc_o", false,-1, 63,0);
+        tracep->declBit(c+22,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_dpicstop_o", false,-1);
+        tracep->declBus(c+23,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_aluop_o", false,-1, 7,0);
+        tracep->declBus(c+24,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_alusel_o", false,-1, 2,0);
+        tracep->declQuad(c+162,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_op1_wdata_o", false,-1, 63,0);
+        tracep->declQuad(c+164,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_op2_wdata_o", false,-1, 63,0);
+        tracep->declQuad(c+25,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_op3_wdata_o", false,-1, 63,0);
+        tracep->declBus(c+27,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_reg_waddr_o", false,-1, 4,0);
+        tracep->declBit(c+28,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_we_o", false,-1);
+        tracep->declBit(c+29,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_instvalid_o", false,-1);
+        tracep->declBus(c+43,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_ex_reg_waddr_i", false,-1, 4,0);
+        tracep->declBit(c+44,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_ex_we_i", false,-1);
+        tracep->declQuad(c+48,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_ex_wdata_i", false,-1, 63,0);
+        tracep->declBus(c+56,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_mem_reg_waddr_i", false,-1, 4,0);
+        tracep->declBit(c+57,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_mem_we_i", false,-1);
+        tracep->declQuad(c+58,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_mem_wdata_i", false,-1, 63,0);
+        tracep->declBus(c+133,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 opcode", false,-1, 6,0);
+        tracep->declBus(c+134,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 funct3", false,-1, 2,0);
+        tracep->declBus(c+135,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 funct6", false,-1, 6,0);
+        tracep->declBus(c+136,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 funct7", false,-1, 6,0);
+        tracep->declBus(c+137,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 funct12", false,-1, 6,0);
+        tracep->declBus(c+138,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 rd", false,-1, 4,0);
+        tracep->declBus(c+139,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 zimm", false,-1, 4,0);
+        tracep->declBus(c+139,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 rs1", false,-1, 4,0);
+        tracep->declBus(c+140,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 rs2", false,-1, 4,0);
+        tracep->declBus(c+141,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 shamt", false,-1, 5,0);
+        tracep->declQuad(c+25,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_Bimm", false,-1, 63,0);
+        tracep->declQuad(c+142,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_JALimm", false,-1, 63,0);
+        tracep->declQuad(c+144,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_JALRimm", false,-1, 63,0);
+        tracep->declQuad(c+146,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_id_u0 id_imm", false,-1, 63,0);
+        tracep->declQuad(c+30,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_pc_i", false,-1, 63,0);
+        tracep->declQuad(c+32,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_dnpc_i", false,-1, 63,0);
+        tracep->declBit(c+34,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_dpicstop_i", false,-1);
+        tracep->declBit(c+45,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_instvalid_i", false,-1);
+        tracep->declBus(c+35,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_aluop_i", false,-1, 7,0);
+        tracep->declBus(c+36,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_alusel_i", false,-1, 2,0);
+        tracep->declQuad(c+37,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_op1_wdata_i", false,-1, 63,0);
+        tracep->declQuad(c+39,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_op2_wdata_i", false,-1, 63,0);
+        tracep->declQuad(c+41,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_op3_wdata_i", false,-1, 63,0);
+        tracep->declBus(c+43,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_reg_waddr_i", false,-1, 4,0);
+        tracep->declBit(c+44,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_we_i", false,-1);
+        tracep->declBit(c+166,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_stall_exreq_o", false,-1);
         tracep->declBit(c+10,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_isjump_o", false,-1);
         tracep->declQuad(c+11,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_jumpaddr_o", false,-1, 63,0);
-        tracep->declQuad(c+27,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_pc_o", false,-1, 63,0);
-        tracep->declBit(c+29,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_dpicstop_o", false,-1);
-        tracep->declBus(c+38,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_reg_waddr_o", false,-1, 4,0);
-        tracep->declBit(c+39,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_we_o", false,-1);
-        tracep->declQuad(c+40,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_wdata_o", false,-1, 63,0);
-        tracep->declQuad(c+135,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 arithmeticres", false,-1, 63,0);
-        tracep->declQuad(c+137,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 logices", false,-1, 63,0);
-        tracep->declQuad(c+139,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_wdata_r", false,-1, 63,0);
-        tracep->declQuad(c+42,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_pc_i", false,-1, 63,0);
-        tracep->declBit(c+44,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_dpicstop_i", false,-1);
-        tracep->declBus(c+45,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_reg_waddr_i", false,-1, 4,0);
-        tracep->declBit(c+46,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_we_i", false,-1);
-        tracep->declQuad(c+47,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_wdata_i", false,-1, 63,0);
-        tracep->declQuad(c+42,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_pc_o", false,-1, 63,0);
-        tracep->declBit(c+44,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_dpicstop_o", false,-1);
-        tracep->declBus(c+45,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_reg_waddr_o", false,-1, 4,0);
-        tracep->declBit(c+46,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_we_o", false,-1);
-        tracep->declQuad(c+47,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_wdata_o", false,-1, 63,0);
+        tracep->declQuad(c+30,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_pc_o", false,-1, 63,0);
+        tracep->declQuad(c+46,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_dnpc_o", false,-1, 63,0);
+        tracep->declBit(c+34,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_dpicstop_o", false,-1);
+        tracep->declBit(c+45,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_instvalid_o", false,-1);
+        tracep->declBus(c+43,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_reg_waddr_o", false,-1, 4,0);
+        tracep->declBit(c+44,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_we_o", false,-1);
+        tracep->declQuad(c+48,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_wdata_o", false,-1, 63,0);
+        tracep->declQuad(c+148,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 arithmeticres", false,-1, 63,0);
+        tracep->declQuad(c+150,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 logices", false,-1, 63,0);
+        tracep->declQuad(c+152,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_ex_u0 ex_wdata_r", false,-1, 63,0);
+        tracep->declQuad(c+50,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_pc_i", false,-1, 63,0);
+        tracep->declQuad(c+52,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_dnpc_i", false,-1, 63,0);
+        tracep->declBit(c+54,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_dpicstop_i", false,-1);
+        tracep->declBit(c+55,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_instvalid_i", false,-1);
+        tracep->declBus(c+56,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_reg_waddr_i", false,-1, 4,0);
+        tracep->declBit(c+57,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_we_i", false,-1);
+        tracep->declQuad(c+58,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_wdata_i", false,-1, 63,0);
+        tracep->declQuad(c+50,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_pc_o", false,-1, 63,0);
+        tracep->declQuad(c+52,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_dnpc_o", false,-1, 63,0);
+        tracep->declBit(c+54,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_dpicstop_o", false,-1);
+        tracep->declBit(c+55,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_instvalid_o", false,-1);
+        tracep->declBus(c+56,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_reg_waddr_o", false,-1, 4,0);
+        tracep->declBit(c+57,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_we_o", false,-1);
+        tracep->declQuad(c+58,"ysyx_22050058_top ysyx_22050058_pipeline ysyx_22050058_mem mem_wdata_o", false,-1, 63,0);
     }
 }
 
@@ -250,14 +275,15 @@ void Vysyx_22050058_top___024root__traceFullSub0(Vysyx_22050058_top___024root* v
         tracep->fullQData(oldp+11,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__jumpaddr_w),64);
         tracep->fullIData(oldp+13,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r),32);
         tracep->fullQData(oldp+14,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_pc_r),64);
-        tracep->fullBit(oldp+16,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg1_re_w));
-        tracep->fullBit(oldp+17,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg2_re_w));
-        tracep->fullCData(oldp+18,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg1_raddr_w),5);
-        tracep->fullCData(oldp+19,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg2_raddr_w),5);
-        tracep->fullBit(oldp+20,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_dpicstop_w));
-        tracep->fullCData(oldp+21,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_aluop_w),8);
-        tracep->fullCData(oldp+22,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_alusel_w),3);
-        tracep->fullQData(oldp+23,((((- (QData)((IData)(
+        tracep->fullQData(oldp+16,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_dnpc_r),64);
+        tracep->fullBit(oldp+18,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg1_re_w));
+        tracep->fullBit(oldp+19,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg2_re_w));
+        tracep->fullCData(oldp+20,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg1_raddr_w),5);
+        tracep->fullCData(oldp+21,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg2_raddr_w),5);
+        tracep->fullBit(oldp+22,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_dpicstop_w));
+        tracep->fullCData(oldp+23,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_aluop_w),8);
+        tracep->fullCData(oldp+24,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_alusel_w),3);
+        tracep->fullQData(oldp+25,((((- (QData)((IData)(
                                                         (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                                          >> 0x1fU)))) 
                                      << 0xcU) | (QData)((IData)(
@@ -270,77 +296,87 @@ void Vysyx_22050058_top___024root__traceFullSub0(Vysyx_22050058_top___024root* v
                                                                     | (0x1eU 
                                                                        & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                                                           >> 7U)))))))),64);
-        tracep->fullCData(oldp+25,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg_waddr_w),5);
-        tracep->fullBit(oldp+26,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_we_w));
-        tracep->fullQData(oldp+27,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_pc_r),64);
-        tracep->fullBit(oldp+29,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_dpicstop_r));
-        tracep->fullCData(oldp+30,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_aluop_r),8);
-        tracep->fullCData(oldp+31,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_alusel_r),3);
-        tracep->fullQData(oldp+32,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_op1_wdata_r),64);
-        tracep->fullQData(oldp+34,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_op2_wdata_r),64);
-        tracep->fullQData(oldp+36,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_op3_wdata_r),64);
-        tracep->fullCData(oldp+38,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_reg_waddr_r),5);
-        tracep->fullBit(oldp+39,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_we_r));
-        tracep->fullQData(oldp+40,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_wdata_w),64);
-        tracep->fullQData(oldp+42,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_pc_r),64);
-        tracep->fullBit(oldp+44,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_dpicstop_r));
-        tracep->fullCData(oldp+45,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_reg_waddr_r),5);
-        tracep->fullBit(oldp+46,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_we_r));
-        tracep->fullQData(oldp+47,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_wdata_r),64);
-        tracep->fullQData(oldp+49,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_pc_r),64);
-        tracep->fullCData(oldp+51,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_reg_waddr_r),5);
-        tracep->fullBit(oldp+52,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_we_r));
-        tracep->fullQData(oldp+53,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_wdata_r),64);
-        tracep->fullQData(oldp+55,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[0]),64);
-        tracep->fullQData(oldp+57,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[1]),64);
-        tracep->fullQData(oldp+59,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[2]),64);
-        tracep->fullQData(oldp+61,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[3]),64);
-        tracep->fullQData(oldp+63,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[4]),64);
-        tracep->fullQData(oldp+65,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[5]),64);
-        tracep->fullQData(oldp+67,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[6]),64);
-        tracep->fullQData(oldp+69,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[7]),64);
-        tracep->fullQData(oldp+71,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[8]),64);
-        tracep->fullQData(oldp+73,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[9]),64);
-        tracep->fullQData(oldp+75,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[10]),64);
-        tracep->fullQData(oldp+77,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[11]),64);
-        tracep->fullQData(oldp+79,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[12]),64);
-        tracep->fullQData(oldp+81,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[13]),64);
-        tracep->fullQData(oldp+83,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[14]),64);
-        tracep->fullQData(oldp+85,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[15]),64);
-        tracep->fullQData(oldp+87,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[16]),64);
-        tracep->fullQData(oldp+89,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[17]),64);
-        tracep->fullQData(oldp+91,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[18]),64);
-        tracep->fullQData(oldp+93,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[19]),64);
-        tracep->fullQData(oldp+95,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[20]),64);
-        tracep->fullQData(oldp+97,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[21]),64);
-        tracep->fullQData(oldp+99,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[22]),64);
-        tracep->fullQData(oldp+101,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[23]),64);
-        tracep->fullQData(oldp+103,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[24]),64);
-        tracep->fullQData(oldp+105,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[25]),64);
-        tracep->fullQData(oldp+107,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[26]),64);
-        tracep->fullQData(oldp+109,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[27]),64);
-        tracep->fullQData(oldp+111,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[28]),64);
-        tracep->fullQData(oldp+113,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[29]),64);
-        tracep->fullQData(oldp+115,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[30]),64);
-        tracep->fullQData(oldp+117,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[31]),64);
-        tracep->fullCData(oldp+119,((0x7fU & vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r)),7);
-        tracep->fullCData(oldp+120,((7U & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
+        tracep->fullCData(oldp+27,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg_waddr_w),5);
+        tracep->fullBit(oldp+28,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_we_w));
+        tracep->fullBit(oldp+29,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_instvalid_w));
+        tracep->fullQData(oldp+30,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_pc_r),64);
+        tracep->fullQData(oldp+32,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_dnpc_r),64);
+        tracep->fullBit(oldp+34,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_dpicstop_r));
+        tracep->fullCData(oldp+35,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_aluop_r),8);
+        tracep->fullCData(oldp+36,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_alusel_r),3);
+        tracep->fullQData(oldp+37,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_op1_wdata_r),64);
+        tracep->fullQData(oldp+39,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_op2_wdata_r),64);
+        tracep->fullQData(oldp+41,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_op3_wdata_r),64);
+        tracep->fullCData(oldp+43,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_reg_waddr_r),5);
+        tracep->fullBit(oldp+44,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_we_r));
+        tracep->fullBit(oldp+45,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_instvalid_r));
+        tracep->fullQData(oldp+46,(((IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__isjump_w)
+                                     ? vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__jumpaddr_w
+                                     : vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_dnpc_r)),64);
+        tracep->fullQData(oldp+48,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_wdata_w),64);
+        tracep->fullQData(oldp+50,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_pc_r),64);
+        tracep->fullQData(oldp+52,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_dnpc_r),64);
+        tracep->fullBit(oldp+54,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_dpicstop_r));
+        tracep->fullBit(oldp+55,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_instvalid_r));
+        tracep->fullCData(oldp+56,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_reg_waddr_r),5);
+        tracep->fullBit(oldp+57,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_we_r));
+        tracep->fullQData(oldp+58,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__mem_wdata_r),64);
+        tracep->fullQData(oldp+60,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_pc_r),64);
+        tracep->fullQData(oldp+62,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_dnpc_r),64);
+        tracep->fullBit(oldp+64,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_instvalid_r));
+        tracep->fullCData(oldp+65,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_reg_waddr_r),5);
+        tracep->fullBit(oldp+66,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_we_r));
+        tracep->fullQData(oldp+67,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__wb_wdata_r),64);
+        tracep->fullQData(oldp+69,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[0]),64);
+        tracep->fullQData(oldp+71,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[1]),64);
+        tracep->fullQData(oldp+73,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[2]),64);
+        tracep->fullQData(oldp+75,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[3]),64);
+        tracep->fullQData(oldp+77,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[4]),64);
+        tracep->fullQData(oldp+79,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[5]),64);
+        tracep->fullQData(oldp+81,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[6]),64);
+        tracep->fullQData(oldp+83,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[7]),64);
+        tracep->fullQData(oldp+85,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[8]),64);
+        tracep->fullQData(oldp+87,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[9]),64);
+        tracep->fullQData(oldp+89,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[10]),64);
+        tracep->fullQData(oldp+91,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[11]),64);
+        tracep->fullQData(oldp+93,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[12]),64);
+        tracep->fullQData(oldp+95,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[13]),64);
+        tracep->fullQData(oldp+97,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[14]),64);
+        tracep->fullQData(oldp+99,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[15]),64);
+        tracep->fullQData(oldp+101,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[16]),64);
+        tracep->fullQData(oldp+103,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[17]),64);
+        tracep->fullQData(oldp+105,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[18]),64);
+        tracep->fullQData(oldp+107,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[19]),64);
+        tracep->fullQData(oldp+109,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[20]),64);
+        tracep->fullQData(oldp+111,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[21]),64);
+        tracep->fullQData(oldp+113,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[22]),64);
+        tracep->fullQData(oldp+115,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[23]),64);
+        tracep->fullQData(oldp+117,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[24]),64);
+        tracep->fullQData(oldp+119,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[25]),64);
+        tracep->fullQData(oldp+121,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[26]),64);
+        tracep->fullQData(oldp+123,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[27]),64);
+        tracep->fullQData(oldp+125,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[28]),64);
+        tracep->fullQData(oldp+127,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[29]),64);
+        tracep->fullQData(oldp+129,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[30]),64);
+        tracep->fullQData(oldp+131,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs[31]),64);
+        tracep->fullCData(oldp+133,((0x7fU & vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r)),7);
+        tracep->fullCData(oldp+134,((7U & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                            >> 0xcU))),3);
-        tracep->fullCData(oldp+121,((vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
+        tracep->fullCData(oldp+135,((vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                      >> 0x1aU)),7);
-        tracep->fullCData(oldp+122,((vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
+        tracep->fullCData(oldp+136,((vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                      >> 0x19U)),7);
-        tracep->fullCData(oldp+123,((0x7fU & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
+        tracep->fullCData(oldp+137,((0x7fU & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                               >> 0x14U))),7);
-        tracep->fullCData(oldp+124,((0x1fU & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
+        tracep->fullCData(oldp+138,((0x1fU & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                               >> 7U))),5);
-        tracep->fullCData(oldp+125,((0x1fU & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
+        tracep->fullCData(oldp+139,((0x1fU & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                               >> 0xfU))),5);
-        tracep->fullCData(oldp+126,((0x1fU & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
+        tracep->fullCData(oldp+140,((0x1fU & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                               >> 0x14U))),5);
-        tracep->fullCData(oldp+127,((0x3fU & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
+        tracep->fullCData(oldp+141,((0x3fU & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                               >> 0x14U))),6);
-        tracep->fullQData(oldp+128,((((- (QData)((IData)(
+        tracep->fullQData(oldp+142,((((- (QData)((IData)(
                                                          (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                                           >> 0x1fU)))) 
                                       << 0x14U) | (QData)((IData)(
@@ -352,22 +388,21 @@ void Vysyx_22050058_top___024root__traceFullSub0(Vysyx_22050058_top___024root* v
                                                                       | (0x7feU 
                                                                          & (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                                                             >> 0x14U)))))))),64);
-        tracep->fullQData(oldp+130,((((- (QData)((IData)(
+        tracep->fullQData(oldp+144,((((- (QData)((IData)(
                                                          (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                                           >> 0x1fU)))) 
                                       << 0xcU) | (QData)((IData)(
                                                                  (vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_inst_r 
                                                                   >> 0x14U))))),64);
-        tracep->fullQData(oldp+132,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_id_u0__DOT__id_imm),64);
-        tracep->fullBit(oldp+134,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_id_u0__DOT__id_instvalid));
-        tracep->fullQData(oldp+135,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_ex_u0__DOT__arithmeticres),64);
-        tracep->fullQData(oldp+137,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_ex_u0__DOT__logices),64);
-        tracep->fullQData(oldp+139,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_ex_u0__DOT__ex_wdata_r),64);
-        tracep->fullBit(oldp+141,(vlSelf->clk));
-        tracep->fullBit(oldp+142,(vlSelf->rst));
-        tracep->fullCData(oldp+143,(vlSelf->ysyx_22050058_top__DOT__stall),6);
-        tracep->fullCData(oldp+144,(vlSelf->ysyx_22050058_top__DOT__flush),6);
-        tracep->fullQData(oldp+145,(((IData)(vlSelf->rst)
+        tracep->fullQData(oldp+146,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_id_u0__DOT__id_imm),64);
+        tracep->fullQData(oldp+148,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_ex_u0__DOT__arithmeticres),64);
+        tracep->fullQData(oldp+150,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_ex_u0__DOT__logices),64);
+        tracep->fullQData(oldp+152,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_ex_u0__DOT__ex_wdata_r),64);
+        tracep->fullBit(oldp+154,(vlSelf->clk));
+        tracep->fullBit(oldp+155,(vlSelf->rst));
+        tracep->fullCData(oldp+156,(vlSelf->ysyx_22050058_top__DOT__stall),6);
+        tracep->fullCData(oldp+157,(vlSelf->ysyx_22050058_top__DOT__flush),6);
+        tracep->fullQData(oldp+158,(((IData)(vlSelf->rst)
                                       ? 0ULL : ((0U 
                                                  == (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg1_raddr_w))
                                                  ? 0ULL
@@ -383,7 +418,7 @@ void Vysyx_22050058_top___024root__traceFullSub0(Vysyx_22050058_top___024root* v
                                                   vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs
                                                   [vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg1_raddr_w]
                                                    : 0ULL))))),64);
-        tracep->fullQData(oldp+147,(((IData)(vlSelf->rst)
+        tracep->fullQData(oldp+160,(((IData)(vlSelf->rst)
                                       ? 0ULL : ((0U 
                                                  == (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg2_raddr_w))
                                                  ? 0ULL
@@ -399,7 +434,7 @@ void Vysyx_22050058_top___024root__traceFullSub0(Vysyx_22050058_top___024root* v
                                                   vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_regfile__DOT__gprs
                                                   [vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg2_raddr_w]
                                                    : 0ULL))))),64);
-        tracep->fullQData(oldp+149,((((((IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_reg_waddr_r) 
+        tracep->fullQData(oldp+162,((((((IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_reg_waddr_r) 
                                         == (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg1_raddr_w)) 
                                        & (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg1_re_w)) 
                                       & (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_we_r))
@@ -431,7 +466,7 @@ void Vysyx_22050058_top___024root__traceFullSub0(Vysyx_22050058_top___024root* v
                                               : ((IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg1_re_w)
                                                   ? 0ULL
                                                   : vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_id_u0__DOT__id_imm))))),64);
-        tracep->fullQData(oldp+151,((((((IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_reg_waddr_r) 
+        tracep->fullQData(oldp+164,((((((IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_reg_waddr_r) 
                                         == (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg2_raddr_w)) 
                                        & (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg2_re_w)) 
                                       & (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ex_we_r))
@@ -463,7 +498,7 @@ void Vysyx_22050058_top___024root__traceFullSub0(Vysyx_22050058_top___024root* v
                                               : ((IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__id_reg2_re_w)
                                                   ? 0ULL
                                                   : vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__ysyx_22050058_id_u0__DOT__id_imm))))),64);
-        tracep->fullBit(oldp+153,(0U));
-        tracep->fullBit(oldp+154,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__stall_idreq_w));
+        tracep->fullBit(oldp+166,(0U));
+        tracep->fullBit(oldp+167,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline__DOT__stall_idreq_w));
     }
 }

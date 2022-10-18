@@ -61,7 +61,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   scan_wp(_this->pc);
 }
 static void itrace(Decode *_this, vaddr_t dnpc) {
-        WriteRingBuff(_this->logbuf, 128);
+        //WriteRingBuff(_this->logbuf, 128);
 }
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
@@ -98,8 +98,8 @@ static void execute(uint64_t n) {
   for (;n > 0; n --) {
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
-    trace_and_difftest(&s, cpu.pc);
-    itrace(&s, cpu.pc);
+     trace_and_difftest(&s, cpu.pc);
+     itrace(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) {break;};
     IFDEF(CONFIG_DEVICE, device_update());
   }
@@ -108,10 +108,10 @@ static void execute(uint64_t n) {
 static void statistic() {
   IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
-  Log("host time spent = " NUMBERIC_FMT " us", g_timer);
-  Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
-  if (g_timer > 0) Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
-  else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
+  // Log("host time spent = " NUMBERIC_FMT " us", g_timer);
+  // Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
+  // if (g_timer > 0) Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
+  // else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
 
 void assert_fail_msg() {
@@ -142,14 +142,14 @@ void cpu_exec(uint64_t n) {
     case NEMU_END: case NEMU_ABORT:
     if(nemu_state.state == NEMU_ABORT){
       	
-      ReadRingBuff();  
-      FreeRingBuff();
+      // ReadRingBuff();  
+      // FreeRingBuff();
     }
-      Log("nemu: %s at pc = " FMT_WORD,
-          (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
-           (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
-            ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
-          nemu_state.halt_pc);
+      // Log("nemu: %s at pc = " FMT_WORD,
+      //     (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
+      //      (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
+      //       ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
+      //     nemu_state.halt_pc);
       // fall through
     case NEMU_QUIT: statistic();
   }

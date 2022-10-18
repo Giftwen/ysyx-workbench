@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-22 10:58:30
- * @LastEditTime: 2022-10-15 02:55:31
+ * @LastEditTime: 2022-10-18 01:33:34
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -20,24 +20,10 @@
   #include <memory>
   #include <assert.h>
   #include <dlfcn.h>
-  #include <dlfcn.h>
 
   #include <getopt.h>
 
-
-#define BUFF_MAX_LEN 128*10
-
-
-char *pHead = NULL;			//环形缓冲区首地址
-char *pValidRead = NULL;	//已使用环形缓冲区首地址
-char *pValidWrite = NULL;	//已使用环形缓冲区尾地址
-char *pTail = NULL;			//环形缓冲区尾地址
-void InitRingBuff();
-void FreeRingBuff();
-int WriteRingBuff(char *pBuff, int AddLen);
-void ReadRingBuff();
-
-
+/*******************COLOR***********************/
 #define ANSI_FG_BLACK   "\33[1;30m"
 #define ANSI_FG_RED     "\33[1;31m"
 #define ANSI_FG_GREEN   "\33[1;32m"
@@ -59,82 +45,54 @@ void ReadRingBuff();
 #define ANSI_FMT(str, fmt) fmt str ANSI_NONE
 
 
+/*******************START***********************/
+typedef struct{
+  uint64_t gpr[32];
+  uint64_t pc;
+} CPU_state;
+CPU_state cpu ={};
 
+#define CONFIG_DIFFTEST 1
+#define BUFF_MAX_LEN 128*10
+char *pHead = NULL;			//环形缓冲区首地址
+char *pValidRead = NULL;	//已使用环形缓冲区首地址
+char *pValidWrite = NULL;	//已使用环形缓冲区尾地址
+char *pTail = NULL;			//环形缓冲区尾地址
+void InitRingBuff();
+void FreeRingBuff();
+int WriteRingBuff(char *pBuff, int AddLen);
+void ReadRingBuff();
+void init_difftest(char *ref_so_file, long img_size, int port);
 
-
-
-
-
-
-
-uint64_t  checkstopVAL ;
-uint64_t  thispc       ;
-extern "C" int checkdpicstop(const svLogicVec32* r) {
-  checkstopVAL=*(uint64_t*)r;
-  return 0;
-}
-extern "C" int checkdpicpc(const svLogicVec32* r) {
-  thispc=*(uint64_t*)r;
-  return 0;
-}
-
-uint64_t *cpu_gpr = NULL;
-extern "C" void set_gpr_ptr(const svOpenArrayHandle r) {
-  cpu_gpr = (uint64_t *)(((VerilatedDpiOpenVar*)r)->datap());
-}
-
-const char *regs[] = {
-  "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
-  "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
-  "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
-  "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
-};
-
-void isa_reg_display() {
-  int i;
-  for (i = 0; i < 32; i ++) {
-    printf("gpr(%02d)[%3s]: " "0x%016lx  " " ", i ,regs[i], cpu_gpr[i]);
-    if (i % 4 == 3) {
-      printf("\n");
-    }
-  }
-  printf("pc: " "0x%016lx"   "\n",thispc);
-  fflush(stdout);
-}
-
-
-
-void dump_gpr() {
-  int i;
-  for (i = 0; i < 32; i++) {
-    printf("gpr[%d] = 0x%lx\n", i, cpu_gpr[i]);
-  }
-}
-
-
-
-
-#define CONFIG_MBASE 0x80000000
-#define CONFIG_MSIZE 0x2800000
-#define PG_ALIGN __attribute((aligned(4096)))
 
 typedef uint64_t word_t;
 typedef word_t   vaddr_t;
 typedef uint32_t paddr_t;
-
 static uint8_t *pmem=NULL ;
-static char *img_file = NULL;
+#define CONFIG_MBASE 0x80000000
+#define CONFIG_MSIZE 0x2800000
+static char *diff_so_file = NULL;
+static int difftest_port = 1234;
 
-
-
-
-
+enum { NPC_RUNNING, NPC_STOP, NPC_END, NPC_ABORT};
+struct NPCstate{
+  int state=NPC_RUNNING;
+  long long int halt_pc;
+  long long int halt_ret;
+} npc_state;
+  
 void welcome(){
+  #ifdef CONFIG_DIFFTEST
+  printf(ANSI_FG_BLUE "[welcome] DIFFTEST :" ANSI_NONE ANSI_FG_GREEN " ON\n" ANSI_NONE);
+  #else
+  printf(ANSI_FG_BLUE "[welcome] DIFFTEST :" ANSI_NONE ANSI_FG_RED " OFF\n" ANSI_NONE);
+  #endif
   #ifdef TRACE_ON
   printf(ANSI_FG_BLUE "[welcome] Trace :" ANSI_NONE ANSI_FG_GREEN " ON\n" ANSI_NONE);
   #else
   printf(ANSI_FG_BLUE "[welcome] Trace :" ANSI_NONE ANSI_FG_RED " OFF\n" ANSI_NONE);
   #endif
+ 
   printf(ANSI_FG_BLUE "[welcome] If trace is enabled, a VCD file will be generated\n" ANSI_NONE);
   printf(ANSI_FG_BLUE "[welcome] Build time: %s, %s\n" ANSI_NONE, __TIME__, __DATE__);
   printf(ANSI_FG_YELLOW "Welcome to riscv-NPC!\n" ANSI_NONE);
@@ -147,7 +105,7 @@ uint8_t* guest_to_host(paddr_t paddr) {
   
   return pmem + paddr - CONFIG_MBASE;
   }
-
+static char *img_file = NULL;
 static long load_img() {
   if (img_file == NULL) {
     printf("No image is given. Use the default build-in image.");
@@ -172,12 +130,14 @@ void init_ram(){
 }
 static int parse_args(int argc, char *argv[]) {
   const struct option table[] = {
+    {"diff"     , optional_argument, NULL, 'd'},
     {"image"    , optional_argument, NULL, 'i'},
     {0          , 0                , NULL,  0 },
   };
   int o;
   while ( (o = getopt_long(argc, argv, "-i:d:", table, NULL)) != -1) {
     switch (o) {
+      case 'd': diff_so_file = optarg;break;
       case 'i': img_file = optarg; break;
       default : exit(0);
     }
@@ -186,130 +146,92 @@ static int parse_args(int argc, char *argv[]) {
 }
 
 
-static inline word_t host_read(void *addr, int len) {
-  switch (len) {
-    case 1: return *(uint8_t  *)addr;
-    case 2: return *(uint16_t *)addr;
-    case 4: return *(uint32_t *)addr;
-    case 8: return *(uint64_t *)addr;
-    default: {printf(ANSI_FG_RED "read error!\n" ANSI_NONE);assert(0);return 4096;}
-  }
-}
-// read
-extern "C" void pmem_read(long long raddr, long long *rdata) {
-  // 总是读取地址为`raddr & ~0x7ull`的8字节返回给`rdata`
-  //printf("raddr is :0x%llx\n",raddr);
-  if(raddr >=CONFIG_MBASE){
-    *rdata = host_read(guest_to_host(raddr & ~0x7ull),8);
-    //printf("rdata is 0x%016llx\n",*rdata);
-  }
-  else {
-    *rdata = 0;
-    //printf(RED "raddr error \n" NONE);
-  }
-}
-
-
-
-
-
-
-
 void init_monitor(int argc, char *argv[]) {
   /* Perform some global initialization. */
   parse_args(argc, argv);
   init_ram();           //初始化内存
-  long img_size = load_img();
-  welcome();
   InitRingBuff();
-
+  long img_size = load_img();
+  init_difftest(diff_so_file,img_size,difftest_port);
+  welcome();
 }
 
-enum { NPC_RUNNING, NPC_STOP, NPC_END, NPC_ABORT};
-struct NPCstate{
-  int state=NPC_RUNNING;
-  long long int halt_pc;
-  long long int halt_ret;
-} npc_state;
+/*******************DPIC***********************/
 
-void npc_halt(long long int pc,long long int value){      
-  npc_state.halt_pc=pc;       
-  npc_state.halt_ret=value;
-  if(npc_state.state == NPC_END&&npc_state.halt_ret == 0){
-    printf( ANSI_FG_BLUE "[halt] npc: " ANSI_NONE ANSI_FG_GREEN "HIT GOOD TRAP" ANSI_NONE);
-    printf(" at pc = 0x%016lx\n",thispc);
+uint64_t  checkstopVAL ;
+uint64_t  thispc       ;
+uint64_t  dnpc       ;
+uint64_t  we       ;
+uint64_t  data       ;
+uint64_t  addr       ;
+uint64_t  instvaild       ;
+extern "C" int checkdpicstop(const svLogicVec32* r) {
+  checkstopVAL=*(uint64_t*)r;
+  return 0;
+}
+extern "C" int checkdpicpc(const svLogicVec32* r) {
+  thispc=*(uint64_t*)r;
+  return 0;
+}
+extern "C" int checkdpicdnpc(const svLogicVec32* r) {
+  dnpc=*(uint64_t*)r;
+  return 0;
+}
+extern "C" int bypassregfilewe(const svLogicVec32* r) {
+  we=*(uint64_t*)r;
+  return 0;
+}
+extern "C" int bypassregfiledata(const svLogicVec32* r) {
+  data=*(uint64_t*)r;
+  return 0;
+}
+extern "C" int bypassregfileaddr(const svLogicVec32* r) {
+  addr=*(uint64_t*)r;
+  return 0;
+}
+extern "C" int checkdpicinstvaild(const svLogicVec32* r) {
+  instvaild=*(uint64_t*)r;
+  return 0;
+}
+
+uint64_t *cpu_gpr = NULL;
+extern "C" void set_gpr_ptr(const svOpenArrayHandle r) {
+  cpu_gpr = (uint64_t *)(((VerilatedDpiOpenVar*)r)->datap());
+}
+/*******************DUMPGPR***********************/
+const char *regs[] = {
+  "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
+  "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
+  "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
+  "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
+};
+
+void isa_reg_display() {
+  int i;
+  printf("\n");
+  for (i = 0; i < 32; i ++) {
+    printf("gpr(%02d)[%3s]: " "0x%016lx  " " ", i ,regs[i], cpu.gpr[i]);
+    if (i % 4 == 3) {
+      printf("\n");
+    }
   }
-  else if(npc_state.state == NPC_END&&npc_state.halt_ret != 0){
-    
-    printf( ANSI_FG_BLUE "[halt] npc: " ANSI_NONE ANSI_FG_RED "HIT BAD TRAP" ANSI_NONE);
-    printf(" at pc = 0x%016lx\n",thispc);
-  }
-  else if(npc_state.state == NPC_ABORT){
-    printf( ANSI_FG_BLUE "[halt] npc: " ANSI_NONE ANSI_FG_RED "ABORT" ANSI_NONE);
-    printf(" at pc = 0x%016lx\n",thispc);
+  printf("pc: " "0x%016lx"   "\n",cpu.pc);
+  fflush(stdout);
+}
+
+
+
+void dump_gpr() {
+  int i;
+  for (i = 0; i < 32; i++) {
+    printf("gpr[%d] = 0x%lx\n", i, cpu_gpr[i]);
   }
 }
 
 
 
 
-  int main(int argc, char** argv, char** env) {
-      #ifdef SIM_ON
-      VerilatedContext* contextp = new VerilatedContext;
-      contextp->commandArgs(argc, argv);
-      Vysyx_22050058_top* top = new Vysyx_22050058_top{contextp};
-      int cycle_num=200;
-      uint64_t limit = cycle_num;
-      init_monitor(argc, argv);
-      #endif
-      
-      #ifdef TRACE_ON
-        VerilatedVcdC* tfp = new VerilatedVcdC;
-        Verilated::traceEverOn(true);
-        top->trace(tfp, 99);
-        tfp->open("obj_dir/npc_sim.vcd");
-        unsigned int cycle = 0;
-      #endif
-      
-      #ifdef SIM_ON
-      
-      while( contextp->time()<1000000&&!contextp->gotFinish()){
-        
-        top->clk =0;
-        if(contextp->time()<10){top->rst =1;}else{top->rst =0;}
-        contextp->timeInc(1);
-        top->eval();
-        #ifdef TRACE_ON
-            tfp->dump(cycle++);
-        #endif
-        if (checkstopVAL){
-          npc_state.state=NPC_END;
-          break;
-        }
-        top->clk =1;
-        top->eval();
-       
-        #ifdef TRACE_ON
-            tfp->dump(cycle++);
-        #endif
-        
-      }
-      isa_reg_display();
-      //dump_gpr();
-      npc_halt(thispc,cpu_gpr[10]);
-      #endif
-      #ifdef TRACE_ON
-        tfp->close();
-      #endif
-      #ifdef SIM_ON
-      delete top;
-      delete contextp;
-      #endif
-      
-      return 0;
-  }
-
-
+/*******************ITRACE***********************/
 
 //环形缓冲区初始化
 void InitRingBuff(){
@@ -365,4 +287,267 @@ void ReadRingBuff(){
           if(pHead_r==pTail){pHead_r=pHead;}
       }
 }
+
+/*******************DPIC MEMORY***********************/
+#define PMEM_LEFT  ((paddr_t)CONFIG_MBASE)
+#define PMEM_RIGHT ((paddr_t)CONFIG_MBASE + CONFIG_MSIZE - 1)
+
+#define PG_ALIGN __attribute((aligned(4096)))
+
+
+
+
+
+static inline word_t host_read(void *addr, int len) {
+  switch (len) {
+    case 1: return *(uint8_t  *)addr;
+    case 2: return *(uint16_t *)addr;
+    case 4: return *(uint32_t *)addr;
+    case 8: return *(uint64_t *)addr;
+    default: {printf(ANSI_FG_RED "read error!\n" ANSI_NONE);assert(0);return 4096;}
+  }
+}
+// read
+extern "C" void pmem_read(long long raddr, long long *rdata) {
+  // 总是读取地址为`raddr & ~0x7ull`的8字节返回给`rdata`
+  //printf("raddr is :0x%llx\n",raddr);
+  if(raddr >=CONFIG_MBASE){
+    *rdata = host_read(guest_to_host(raddr & ~0x7ull),8);
+    //printf("rdata is 0x%016llx\n",*rdata);
+  }
+  else {
+    *rdata = 0;
+    //printf(RED "raddr error \n" NONE);
+  }
+}
+
+
+/*******************DIFFTEST***********************/ 
+#define CONFIG_PC_RESET_OFFSET 0x0
+#define RESET_VECTOR (PMEM_LEFT + CONFIG_PC_RESET_OFFSET)
+
+enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
+# define DIFFTEST_REG_SIZE (sizeof(uint64_t) * 33) // GRPs + pc
+
+
+void (*ref_difftest_memcpy)(paddr_t addr, void *buf, size_t n, bool direction) = NULL;
+void (*ref_difftest_regcpy)(void *dut, bool direction) = NULL;
+void (*ref_difftest_exec)(uint64_t n) = NULL;
+void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
+void (*ref_difftest_loadimage)(char * image2) = NULL;
+
+#ifdef CONFIG_DIFFTEST
+
+static bool is_skip_ref = false;
+static int skip_dut_nr_inst = 0;
+
+
+void difftest_skip_ref() {
+  is_skip_ref = true;
+  skip_dut_nr_inst = 0;
+}
+
+void difftest_skip_dut(int nr_ref, int nr_dut) {
+  skip_dut_nr_inst += nr_dut;
+
+  while (nr_ref -- > 0) {
+    ref_difftest_exec(1);
+  }
+}
+
+void init_difftest(char *ref_so_file, long img_size, int port) {
+  assert(ref_so_file != NULL);
+  void *handle;
+  handle = dlopen(ref_so_file, RTLD_LAZY);
+  assert(handle);
+  ref_difftest_memcpy = (void(*)(paddr_t,void*,size_t,bool))dlsym(handle, "difftest_memcpy");
+  assert(ref_difftest_memcpy);
+  ref_difftest_loadimage = (void(*)(char*))dlsym(handle, "load_img2");
+  assert(ref_difftest_memcpy);
+  ref_difftest_regcpy = (void(*)(void*,bool))dlsym(handle, "difftest_regcpy");
+  assert(ref_difftest_regcpy);
+  ref_difftest_exec = (void(*)(uint64_t))dlsym(handle, "difftest_exec");
+  assert(ref_difftest_exec);
+  ref_difftest_raise_intr = (void(*)(uint64_t))dlsym(handle, "difftest_raise_intr");
+  assert(ref_difftest_raise_intr);
+  void (*ref_difftest_init)(int) = (void(*)(int))dlsym(handle, "difftest_init");
+  assert(ref_difftest_init);
+  // for (int i = 0; i < 32; i ++) {
+  //     cpu.gpr[i]=cpu_gpr[i];
+  //   }
+  ref_difftest_init(port);
+  ref_difftest_loadimage(img_file);
+  //ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
+}
+
+
+static inline bool difftest_check_reg(const char *name, vaddr_t pc, word_t ref, word_t dut) {
+  if (ref != dut) {
+    printf("\n%s is different after executing instruction at pc = " ANSI_FG_RED "%lx" ANSI_NONE
+        ", right = " ANSI_FG_RED "%lx" ANSI_NONE ", wrong = " ANSI_FG_RED "%lx" ANSI_NONE ", diff = " ANSI_FG_RED "%lx" ANSI_NONE "\n",
+        name, pc, ref, dut, ref ^ dut);
+    return false;
+  }
+  return true;
+}
+static inline int check_reg_idx(int idx) {
+  assert(idx >= 0 && idx < 32);
+  return idx;
+}
+static inline const char* reg_name(int idx, int width) {
+  extern const char* regs[];
+  return regs[check_reg_idx(idx)];
+}
+bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
+  if (memcmp(&cpu.gpr[1], &ref_r->gpr[1], DIFFTEST_REG_SIZE - sizeof(cpu.gpr[0]))) {
+  int i;
+  // do not check $0
+  for (i = 1; i < 32; i ++) {
+    difftest_check_reg(reg_name(i, 4), pc, ref_r->gpr[i], cpu.gpr[i]);
+  }
+  difftest_check_reg("pc", pc, ref_r->pc, cpu.pc);
+  return false;
+  }
+  return true;
+}
+
+
+static void checkregs(CPU_state *ref, vaddr_t pc) {
+  if (!isa_difftest_checkregs(ref, pc)) {
+    npc_state.state = NPC_ABORT;
+    npc_state.halt_pc = pc;
+    isa_reg_display();
+  }
+}
+
+
+void difftest_step(vaddr_t pc, vaddr_t npc) {
+  CPU_state ref_r;
+
+  if (skip_dut_nr_inst > 0) {
+    ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
+    if (ref_r.pc == npc) {
+      skip_dut_nr_inst = 0;
+      checkregs(&ref_r, npc);
+      return;
+    }
+    skip_dut_nr_inst --;
+    if (skip_dut_nr_inst == 0)
+      printf("can not catch up with ref.pc = " "%lx" " at pc = " "%lx", ref_r.pc, pc);
+    return;
+  }
+
+  if (is_skip_ref) {
+    // to skip the checking of an instruction, just copy the reg state to reference design
+    ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);
+    is_skip_ref = false;
+    return;
+  }
+
+  ref_difftest_exec(1);
+  ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
+
+  checkregs(&ref_r, pc);
+}
+
+#else
+
+#endif
+
+
+
+/*******************END***********************/
+void npc_halt(long long int pc,long long int value){      
+  npc_state.halt_pc=pc;       
+  npc_state.halt_ret=value;
+  if(npc_state.state == NPC_END&&npc_state.halt_ret == 0){
+    printf( ANSI_FG_BLUE "[halt] npc: " ANSI_NONE ANSI_FG_GREEN "HIT GOOD TRAP" ANSI_NONE);
+    printf(" at pc = 0x%016lx\n",thispc);
+  }
+  else if(npc_state.state == NPC_END&&npc_state.halt_ret != 0){
+    
+    printf( ANSI_FG_BLUE "[halt] npc: " ANSI_NONE ANSI_FG_RED "HIT BAD TRAP" ANSI_NONE);
+    printf(" at pc = 0x%016lx\n",thispc);
+  }
+  else if(npc_state.state == NPC_ABORT){
+    printf( ANSI_FG_BLUE "[halt] npc: " ANSI_NONE ANSI_FG_RED "ABORT" ANSI_NONE);
+    printf(" at pc = 0x%016lx\n",thispc);
+  }
+}
+void updatecpu(){
+  for (int i = 0; i < 32; i ++) {
+      cpu.gpr[i]=cpu_gpr[i];
+      }
+      cpu.pc=dnpc;
+      if(we&&instvaild){cpu.gpr[addr]=data;}
+}
+ 
+
+/*******************MAIN***********************/
+  int main(int argc, char** argv, char** env) {
+      #ifdef SIM_ON
+      VerilatedContext* contextp = new VerilatedContext;
+      contextp->commandArgs(argc, argv);
+      Vysyx_22050058_top* top = new Vysyx_22050058_top{contextp};
+      int cycle_num=200;
+      uint64_t limit = cycle_num;
+      init_monitor(argc, argv);
+      #endif
+      
+      #ifdef TRACE_ON
+        VerilatedVcdC* tfp = new VerilatedVcdC;
+        Verilated::traceEverOn(true);
+        top->trace(tfp, 99);
+        tfp->open("obj_dir/npc_sim.vcd");
+        unsigned int cycle = 0;
+      #endif
+      
+      #ifdef SIM_ON
+      
+      while( contextp->time()<1000000&&!contextp->gotFinish()){
+        
+        top->clk =0;
+        if(contextp->time()<10){top->rst =1;}else{top->rst =0;}
+        contextp->timeInc(1);
+        top->eval();
+        #ifdef TRACE_ON
+            tfp->dump(cycle++);
+        #endif
+        if (checkstopVAL){
+          npc_state.state=NPC_END;
+          break;
+        }
+        if (npc_state.state==NPC_END||npc_state.state==NPC_ABORT){
+          break;
+        }
+        updatecpu();
+        if(instvaild!=0){difftest_step(thispc,dnpc);}
+        top->clk =1;
+        top->eval();
+
+        #ifdef TRACE_ON
+            tfp->dump(cycle++);
+        #endif
+        
+      }
+      
+      //dump_gpr();
+      updatecpu();
+      //isa_reg_display();
+     // ref_difftest_exec(-1);
+
+      //ref_difftest_regcpy(&cpu.gpr, DIFFTEST_TO_DUT);
+      npc_halt(thispc,cpu.gpr[10]);
+      
+      #endif
+      #ifdef TRACE_ON
+        tfp->close();
+      #endif
+      #ifdef SIM_ON
+      delete top;
+      delete contextp;
+      #endif
+      
+      return 0;
+  }
 

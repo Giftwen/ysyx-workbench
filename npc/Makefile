@@ -41,6 +41,9 @@ INCFLAGS = $(addprefix -I, $(INC_PATH))
 CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\"" -DNVBOARD_ON 
 LDFLAGS += -lSDL2 -lSDL2_image
 
+
+
+DIFFSO = /home/gift/workplace/ysyx-workbench/nemu/build/riscv64-nemu-interpreter-so
 # $(BIN): $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 # 	@rm -rf $(OBJ_DIR)
 # 	$(VERILATOR) $(VERILATOR_CFLAGS) \
@@ -63,8 +66,8 @@ all: $(VSRC)
 
 run: $(VSRC)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	verilator  -cc -exe --build -Wall  ./csrc/main.cpp $^ -top-module ysyx_22050058_top --trace -CFLAGS "$(CPPFLAGS) -DSIM_ON  "  -Wno-WIDTH -Wno-CMPCONST -Wno-UNDRIVEN -Wno-REDEFMACRO -Wno-UNUSED -Wno-IGNOREDRETURN --timescale-override 1ns/1ps
-	-./obj_dir/Vysyx_22050058_top -i $(IMG)
+	verilator   -cc -exe -LDFLAGS -ldl --build -Wall --trace -CFLAGS "$(CPPFLAGS) -DSIM_ON  "  ./csrc/main.cpp  $^ -top-module ysyx_22050058_top   -Wno-WIDTH -Wno-CMPCONST -Wno-UNDRIVEN -Wno-REDEFMACRO -Wno-UNUSED -Wno-IGNOREDRETURN --timescale-override 1ns/1ps  
+	-./obj_dir/Vysyx_22050058_top -i $(IMG) -d $(DIFFSO) 
 
 
 v2f: 

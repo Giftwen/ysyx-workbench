@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-26 11:09:44
- * @LastEditTime: 2022-10-15 02:09:00
+ * @LastEditTime: 2022-10-18 02:03:46
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -11,6 +11,7 @@
 
     //Interface with IFstage
     input   wire    [`ysyx_22050058_InstAdderBus]   id_pc_i,
+    input   wire    [`ysyx_22050058_InstAdderBus]   id_dnpc_i,
     input   wire    [`ysyx_22050058_InstBus]        id_inst_i,
 
     //Interface with Regfile
@@ -23,7 +24,8 @@
     //Interface with CtrlBlock
     output  reg                                     id_stall_idreq_o,
     //Interface with EXstage
-    output  reg     [`ysyx_22050058_InstAdderBus]   id_pc_o,   
+    output  reg     [`ysyx_22050058_InstAdderBus]   id_pc_o, 
+    output  reg     [`ysyx_22050058_InstAdderBus]   id_dnpc_o,  
     output  reg                                     id_dpicstop_o,                                 
     output  reg     [`ysyx_22050058_AluOpBus]       id_aluop_o,
     output  reg     [`ysyx_22050058_AluSelBus]      id_alusel_o,
@@ -32,6 +34,7 @@
     output  reg     [`ysyx_22050058_RegBUS]         id_op3_wdata_o,
     output  reg     [`ysyx_22050058_RegAddrBus]     id_reg_waddr_o,
     output  reg                                     id_we_o,
+    output  reg                                     id_instvalid_o,
     input   wire    [`ysyx_22050058_RegAddrBus]     id_ex_reg_waddr_i,  //fix data harzard
     input   wire                                    id_ex_we_i,         //fix data harzard
     input   wire    [`ysyx_22050058_RegBUS]         id_ex_wdata_i,      //fix data harzard
@@ -59,10 +62,11 @@
     wire[`ysyx_22050058_RegBUS]	id_JALimm     =   {{44{id_inst_i[31]}}, id_inst_i[19:12], id_inst_i[20], id_inst_i[30:21], 1'b0};
     wire[`ysyx_22050058_RegBUS]	id_JALRimm    =   {{52{id_inst_i[31]}}, id_inst_i[31:20]};
     reg [`ysyx_22050058_RegBUS]	id_imm;
-    reg                         id_instvalid;
+    
 
     always @(*) begin
         id_pc_o             =   id_pc_i;
+        id_dnpc_o           =   id_dnpc_i;
         id_op3_wdata_o      =   id_Bimm;
     end
 
@@ -71,7 +75,7 @@
         id_alusel_o         =       `ysyx_22050058_ALU_NOP_SEL;
         id_reg_waddr_o      =       `ysyx_22050058_NOP_REG_Addr;
         id_we_o             =       `ysyx_22050058_WriteDisable;
-        id_instvalid        =       `ysyx_22050058_InstValid;
+        id_instvalid_o        =       `ysyx_22050058_InstnVaild;
         id_reg1_re_o        =       `ysyx_22050058_ReadDisable;
         id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
         id_reg1_raddr_o     =       `ysyx_22050058_NOP_REG_Addr;
@@ -79,6 +83,19 @@
         id_imm              =       `ysyx_22050058_ZeroWord;
         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
         case(opcode)
+            7'b0100011:begin
+                id_aluop_o          =       `ysyx_22050058_ALU_ADD_OP;
+                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
+                id_we_o             =       `ysyx_22050058_WriteDisable;
+                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       0;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+            end
             `ysyx_22050058_INST_TYPE_I: begin
                 case(funct3) 
                     `ysyx_22050058_INST_ADDI: begin
@@ -91,7 +108,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_XORI: begin
@@ -104,7 +121,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_ORI : begin
@@ -117,7 +134,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_ANDI: begin
@@ -130,7 +147,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_SLTI: begin
@@ -143,7 +160,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_SLTIU: begin
@@ -156,7 +173,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_SLLIFUN3:begin
@@ -171,7 +188,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       shamt;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -191,7 +208,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       shamt;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                             `ysyx_22050058_INST_SRAI:begin
@@ -204,7 +221,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       shamt;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -228,7 +245,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_SLLIWFUN3:begin
@@ -243,7 +260,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       shamt;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -263,7 +280,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                             `ysyx_22050058_INST_SRAIW:begin
@@ -276,7 +293,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -302,7 +319,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                             `ysyx_22050058_INST_SUB:begin
@@ -315,7 +332,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -334,7 +351,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -353,7 +370,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -372,7 +389,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -391,7 +408,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -410,7 +427,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -429,7 +446,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -448,7 +465,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                             `ysyx_22050058_INST_SRL:begin
@@ -461,7 +478,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -486,7 +503,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                             `ysyx_22050058_INST_SUBW:begin
@@ -499,7 +516,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -518,7 +535,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -537,7 +554,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                             `ysyx_22050058_INST_SRLW:begin
@@ -550,7 +567,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -573,7 +590,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       `ysyx_22050058_ZeroWord;
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_BNE:begin
@@ -586,7 +603,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       `ysyx_22050058_ZeroWord;
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_BLT:begin
@@ -599,7 +616,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       `ysyx_22050058_ZeroWord;
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_BGE:begin
@@ -612,7 +629,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       `ysyx_22050058_ZeroWord;
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_BLTU:begin
@@ -625,7 +642,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       `ysyx_22050058_ZeroWord;
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     `ysyx_22050058_INST_BGEU:begin
@@ -638,7 +655,7 @@
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
                         id_imm              =       `ysyx_22050058_ZeroWord;
-                        id_instvalid        =       `ysyx_22050058_InstValid;
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                     end
                     default: begin
@@ -655,7 +672,7 @@
                 id_reg1_raddr_o     =       rs1;//pc?
                 id_reg2_raddr_o     =       rs2;
                 id_imm              =       id_JALimm;
-                id_instvalid        =       `ysyx_22050058_InstValid;
+                id_instvalid_o        =       `ysyx_22050058_InstValid;
                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP; 
             end
             `ysyx_22050058_INST_JALR   : begin//xxx
@@ -668,7 +685,7 @@
                 id_reg1_raddr_o     =       rs1;//pc?
                 id_reg2_raddr_o     =       rs2;
                 id_imm              =       id_JALRimm;
-                id_instvalid        =       `ysyx_22050058_InstValid;
+                id_instvalid_o        =       `ysyx_22050058_InstValid;
                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP; 
             end
             `ysyx_22050058_INST_AUIPC   : begin//xxx
@@ -681,7 +698,7 @@
                 id_reg1_raddr_o     =       rs1;//pc?
                 id_reg2_raddr_o     =       rs2;
                 id_imm              =       {{44{id_inst_i[31]}}, id_inst_i[31:12]}<<4'd12;
-                id_instvalid        =       `ysyx_22050058_InstValid;
+                id_instvalid_o        =       `ysyx_22050058_InstValid;
                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP; 
             end
             `ysyx_22050058_INST_LUI :   begin
@@ -694,7 +711,7 @@
                 id_reg1_raddr_o     =       `ysyx_22050058_RegAddrBusNum'b0;//gpr0
                 id_reg2_raddr_o     =       rs2;
                 id_imm              =       {{44{id_inst_i[31]}}, id_inst_i[31:12]}<<4'd12;
-                id_instvalid        =       `ysyx_22050058_InstValid;
+                id_instvalid_o        =       `ysyx_22050058_InstValid;
                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;                
             end
             `ysyx_22050058_INST_CSR: begin
@@ -706,7 +723,7 @@
                                 id_alusel_o         =       `ysyx_22050058_ALU_NOP_SEL;
                                 id_reg_waddr_o      =       `ysyx_22050058_NOP_REG_Addr;
                                 id_we_o             =       `ysyx_22050058_WriteDisable;
-                                id_instvalid        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadDisable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
                                 id_reg1_raddr_o     =       `ysyx_22050058_NOP_REG_Addr;
