@@ -67,7 +67,7 @@ all: $(VSRC)
 run: $(VSRC)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	verilator   -cc -exe -LDFLAGS -ldl --build -Wall --trace -CFLAGS "$(CPPFLAGS) -DSIM_ON  "  ./csrc/main.cpp  $^ -top-module ysyx_22050058_top   -Wno-WIDTH -Wno-CMPCONST -Wno-UNDRIVEN -Wno-REDEFMACRO -Wno-UNUSED -Wno-IGNOREDRETURN --timescale-override 1ns/1ps  
-	-./obj_dir/Vysyx_22050058_top -i $(IMG) -d $(DIFFSO) 
+	./obj_dir/Vysyx_22050058_top -i $(IMG) -d $(DIFFSO) 
 
 
 v2f: 

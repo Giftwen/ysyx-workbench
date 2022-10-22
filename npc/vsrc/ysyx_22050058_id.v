@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-26 11:09:44
- * @LastEditTime: 2022-10-18 02:03:46
+ * @LastEditTime: 2022-10-22 09:17:44
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -35,6 +35,7 @@
     output  reg     [`ysyx_22050058_RegAddrBus]     id_reg_waddr_o,
     output  reg                                     id_we_o,
     output  reg                                     id_instvalid_o,
+    input   wire    [`ysyx_22050058_AluSelBus]      id_ex_alusel_i,     //fix data harzard
     input   wire    [`ysyx_22050058_RegAddrBus]     id_ex_reg_waddr_i,  //fix data harzard
     input   wire                                    id_ex_we_i,         //fix data harzard
     input   wire    [`ysyx_22050058_RegBUS]         id_ex_wdata_i,      //fix data harzard
@@ -44,7 +45,7 @@
     input   wire                                    id_mem_we_i,        //fix data harzard
     input   wire    [`ysyx_22050058_RegBUS]         id_mem_wdata_i      //fix data harzard
  );
-
+    
 
 
     wire[6:0] opcode    =       id_inst_i[6:0];
@@ -58,16 +59,33 @@
     wire[4:0] rs1       =       id_inst_i[19:15];
     wire[4:0] rs2       =       id_inst_i[24:20];
     wire[5:0] shamt     =       id_inst_i[25:20];
+    wire[`ysyx_22050058_RegBUS]	id_Simm       =   {{30{id_inst_i[31]}}, id_inst_i[31:25], id_inst_i[11:7]};
     wire[`ysyx_22050058_RegBUS]	id_Bimm       =   {{52{id_inst_i[31]}}, id_inst_i[7], id_inst_i[30:25], id_inst_i[11:8], 1'b0};
     wire[`ysyx_22050058_RegBUS]	id_JALimm     =   {{44{id_inst_i[31]}}, id_inst_i[19:12], id_inst_i[20], id_inst_i[30:21], 1'b0};
     wire[`ysyx_22050058_RegBUS]	id_JALRimm    =   {{52{id_inst_i[31]}}, id_inst_i[31:20]};
     reg [`ysyx_22050058_RegBUS]	id_imm;
-    
+
+    wire id_preinstisload;
+    assign id_preinstisload = (id_ex_alusel_i==`ysyx_22050058_AluSelBusNum'd3);
+
+    always @(*) begin
+        if((id_preinstisload==1'b1)&&((id_ex_reg_waddr_i==id_reg1_raddr_o)||(id_ex_reg_waddr_i==id_reg2_raddr_o))&&(id_reg1_re_o == `ysyx_22050058_ReadEnable)&&(id_ex_we_i == `ysyx_22050058_WriteEnable)) begin
+            id_stall_idreq_o = `ysyx_22050058_StallEnable;
+        end else begin
+            id_stall_idreq_o = `ysyx_22050058_StallDisable;
+        end
+
+    end
 
     always @(*) begin
         id_pc_o             =   id_pc_i;
         id_dnpc_o           =   id_dnpc_i;
-        id_op3_wdata_o      =   id_Bimm;
+        if (opcode==`ysyx_22050058_INST_TYPE_S) begin
+            id_op3_wdata_o      =   id_Simm;
+        end else begin
+            id_op3_wdata_o      =   id_Bimm;
+        end
+        
     end
 
     always @(*) begin
@@ -83,18 +101,160 @@
         id_imm              =       `ysyx_22050058_ZeroWord;
         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
         case(opcode)
-            7'b0100011:begin
-                id_aluop_o          =       `ysyx_22050058_ALU_ADD_OP;
-                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
-                id_we_o             =       `ysyx_22050058_WriteDisable;
-                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+            `ysyx_22050058_INST_TYPE_ILD: begin
+                case(funct3) 
+                    `ysyx_22050058_INST_LB: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_LB_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_LOAD_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteEnable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                         id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
                         id_reg_waddr_o      =       rd;
                         id_reg1_raddr_o     =       rs1;
                         id_reg2_raddr_o     =       rs2;
-                        id_imm              =       0;
+                        id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
                         id_instvalid_o        =       `ysyx_22050058_InstValid;
                         id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    end
+                    `ysyx_22050058_INST_LH: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_LH_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_LOAD_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteEnable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;                        
+                    end
+                    `ysyx_22050058_INST_LW: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_LW_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_LOAD_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteEnable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;                        
+                    end
+                    `ysyx_22050058_INST_LD: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_LD_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_LOAD_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteEnable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;                        
+                    end
+                    `ysyx_22050058_INST_LBU: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_LBU_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_LOAD_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteEnable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;                        
+                    end
+                    `ysyx_22050058_INST_LHU: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_LHU_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_LOAD_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteEnable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;                    
+                    end
+                    `ysyx_22050058_INST_LWU: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_LWU_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_LOAD_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteEnable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       {{52{id_inst_i[31]}}, id_inst_i[31:20]};
+                        id_instvalid_o        =       `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;                    
+                    end
+                    default:begin
+                    end
+                endcase
+            end
+            `ysyx_22050058_INST_TYPE_S: begin
+                case(funct3) 
+                    `ysyx_22050058_INST_SB: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_SB_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_STORE_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteDisable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       id_Simm;
+                        id_instvalid_o        =     `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    end
+                    `ysyx_22050058_INST_SH: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_SH_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_STORE_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteDisable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       id_Simm;
+                        id_instvalid_o        =     `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;                        
+                    end
+                    `ysyx_22050058_INST_SW: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_SW_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_STORE_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteDisable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       id_Simm;
+                        id_instvalid_o        =     `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;                        
+                    end
+                    `ysyx_22050058_INST_SD: begin
+                        id_aluop_o          =       `ysyx_22050058_ALU_SD_OP;
+                        id_alusel_o         =       `ysyx_22050058_ALU_STORE_SEL;
+                        id_we_o             =       `ysyx_22050058_WriteDisable;
+                        id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                        id_reg_waddr_o      =       rd;
+                        id_reg1_raddr_o     =       rs1;
+                        id_reg2_raddr_o     =       rs2;
+                        id_imm              =       id_Simm;
+                        id_instvalid_o        =     `ysyx_22050058_InstValid;
+                        id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;                        
+                    end
+                    default:begin
+                    end
+                endcase
             end
             `ysyx_22050058_INST_TYPE_I: begin
                 case(funct3) 
@@ -180,7 +340,7 @@
                         case(funct6)
                             `ysyx_22050058_INST_SLLI:begin
                                 id_aluop_o          =       `ysyx_22050058_ALU_SLL_OP;
-                                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
+                                id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
@@ -251,8 +411,8 @@
                     `ysyx_22050058_INST_SLLIWFUN3:begin
                         case(funct6)
                             `ysyx_22050058_INST_SLLIW:begin
-                                id_aluop_o          =       `ysyx_22050058_ALU_SLL_OP;
-                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
+                                id_aluop_o          =       `ysyx_22050058_ALU_SLLW_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64LOGICW_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
@@ -271,28 +431,28 @@
                     `ysyx_22050058_INST_SRLIWFUN3:begin
                         case(funct6)
                             `ysyx_22050058_INST_SRLIW:begin
-                                id_aluop_o          =       `ysyx_22050058_ALU_SRL_OP;
-                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
+                                id_aluop_o          =       `ysyx_22050058_ALU_SRLW_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64LOGICW_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
                                 id_reg_waddr_o      =       rd;
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
-                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_imm              =       shamt;
                                 id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                             `ysyx_22050058_INST_SRAIW:begin
-                                id_aluop_o          =       `ysyx_22050058_ALU_SRA_OP;
-                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
+                                id_aluop_o          =       `ysyx_22050058_ALU_SRAW_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64LOGICW_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
                                 id_reg_waddr_o      =       rd;
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
-                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_imm              =       shamt;
                                 id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
@@ -526,8 +686,8 @@
                     `ysyx_22050058_INST_SLLWFUN3:begin
                         case(funct7)
                             `ysyx_22050058_INST_SLLW:begin
-                                id_aluop_o          =       `ysyx_22050058_ALU_SLL_OP;
-                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
+                                id_aluop_o          =       `ysyx_22050058_ALU_SLLW_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64LOGICW_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
@@ -545,8 +705,8 @@
                     `ysyx_22050058_INST_SRAWFUN3:begin
                         case(funct7)
                             `ysyx_22050058_INST_SRAW:begin
-                                id_aluop_o          =       `ysyx_22050058_ALU_SRA_OP;
-                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
+                                id_aluop_o          =       `ysyx_22050058_ALU_SRAW_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64LOGICW_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
@@ -558,8 +718,8 @@
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                             `ysyx_22050058_INST_SRLW:begin
-                                id_aluop_o          =       `ysyx_22050058_ALU_SRL_OP;
-                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
+                                id_aluop_o          =       `ysyx_22050058_ALU_SRLW_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64LOGICW_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadEnable;

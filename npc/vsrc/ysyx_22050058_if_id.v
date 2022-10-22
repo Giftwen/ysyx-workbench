@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-26 11:10:43
- * @LastEditTime: 2022-10-17 22:37:32
+ * @LastEditTime: 2022-10-21 19:59:00
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -31,11 +31,16 @@ module ysyx_22050058_if_id(
         end else if((stall[1] == `ysyx_22050058_StallEnable)
             &&(stall[2] == `ysyx_22050058_StallDisable)) begin
             id_pc_o     <=  `ysyx_22050058_ZeroWord;
-            id_dnpc_o   <=  `ysyx_22050058_RstVector;
+            id_dnpc_o   <=  `ysyx_22050058_ZeroWord;
             id_inst_o   <=  `ysyx_22050058_ZeroWord;
+        end else if((stall[1] == `ysyx_22050058_StallEnable)
+            &&(stall[2] == `ysyx_22050058_StallEnable)) begin
+            id_pc_o     <=  id_pc_o;
+            id_dnpc_o   <=  id_dnpc_o;
+            id_inst_o   <=  id_inst_o;
         end else if(flush[1] == `ysyx_22050058_FlushEnable) begin
             id_pc_o     <=  `ysyx_22050058_ZeroWord;
-            id_dnpc_o   <=  `ysyx_22050058_RstVector;
+            id_dnpc_o   <=  `ysyx_22050058_ZeroWord;
             id_inst_o   <=  `ysyx_22050058_ZeroWord;
         end else if (stall[1] == `ysyx_22050058_StallDisable)begin
             id_pc_o     <=  if_pc_i;

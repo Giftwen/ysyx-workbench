@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-22 10:58:30
- * @LastEditTime: 2022-10-18 01:33:34
+ * @LastEditTime: 2022-10-22 11:57:49
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -169,24 +169,25 @@ extern "C" int checkdpicstop(const svLogicVec32* r) {
   checkstopVAL=*(uint64_t*)r;
   return 0;
 }
-extern "C" int checkdpicpc(const svLogicVec32* r) {
-  thispc=*(uint64_t*)r;
+extern "C" int checkdpicpc(long long r) {
+  thispc=r;
   return 0;
 }
-extern "C" int checkdpicdnpc(const svLogicVec32* r) {
-  dnpc=*(uint64_t*)r;
+extern "C" int checkdpicdnpc(long long r) {
+  dnpc=r;
   return 0;
 }
 extern "C" int bypassregfilewe(const svLogicVec32* r) {
   we=*(uint64_t*)r;
   return 0;
 }
-extern "C" int bypassregfiledata(const svLogicVec32* r) {
-  data=*(uint64_t*)r;
+extern "C" int bypassregfiledata(long long r) {
+  data=r;
+  //printf("data is %016lx\n",data);
   return 0;
 }
-extern "C" int bypassregfileaddr(const svLogicVec32* r) {
-  addr=*(uint64_t*)r;
+extern "C" int bypassregfileaddr(long long r) {
+  addr=r;
   return 0;
 }
 extern "C" int checkdpicinstvaild(const svLogicVec32* r) {
@@ -210,7 +211,7 @@ void isa_reg_display() {
   int i;
   printf("\n");
   for (i = 0; i < 32; i ++) {
-    printf("gpr(%02d)[%3s]: " "0x%016lx  " " ", i ,regs[i], cpu.gpr[i]);
+    printf("gpr(%02d)[%3s]: " "0x%016lx  " " ", i ,regs[i] , cpu.gpr[i]);
     if (i % 4 == 3) {
       printf("\n");
     }
@@ -307,6 +308,15 @@ static inline word_t host_read(void *addr, int len) {
     default: {printf(ANSI_FG_RED "read error!\n" ANSI_NONE);assert(0);return 4096;}
   }
 }
+static inline void host_write(void *addr, int len, word_t data) {
+  switch (len) {
+    case 1: *(uint8_t  *)addr = data; return;
+    case 2: *(uint16_t *)addr = data; return;
+    case 4: *(uint32_t *)addr = data; return;
+    case 8: *(uint64_t *)addr = data; return;
+    //default:{assert(0);}
+}
+}
 // read
 extern "C" void pmem_read(long long raddr, long long *rdata) {
   // 总是读取地址为`raddr & ~0x7ull`的8字节返回给`rdata`
@@ -320,7 +330,45 @@ extern "C" void pmem_read(long long raddr, long long *rdata) {
     //printf(RED "raddr error \n" NONE);
   }
 }
+extern "C" void pmem_write(long long waddr, long long wdata, char wmask) {
+  // 总是往地址为`waddr & ~0x7ull`的8字节按写掩码`wmask`写入`wdata`
+  // `wmask`中每比特表示`wdata`中1个字节的掩码,
+  // 如`wmask = 0x3`代表只写入最低2个字节, 内存中的其它字节保持不变
+  int len;
+  
+  long long addr = waddr & ~0x7ull;
+  switch(wmask){
+    //8bit
+    case 0x1  : len = 1 ;                ;break;
+    case 0x2  : len = 1 ; addr = addr + 1;break;
+    case 0x4  : len = 1 ; addr = addr + 2;break;
+    case 0x8  : len = 1 ; addr = addr + 3;break;
+    case 0x10 : len = 1 ; addr = addr + 4;break;
+    case 0x20 : len = 1 ; addr = addr + 5;break;
+    case 0x40 : len = 1 ; addr = addr + 6;break;
+    case -128 : len = 1 ; addr = addr + 7;break;         //sign 0b1000_0000
+    //16bit
+    case 0x3  : len = 2 ;                ;break;
+    case 0xc  : len = 2 ; addr = addr + 2;break;
+    case 0x30 : len = 2 ; addr = addr + 4;break;
+    case -64  : len = 2 ; addr = addr + 6;break;         //sign 0b1100_0000
+    //32bit
+    case 0xf  : len = 4 ;                ;break;      
+    case -16  : len = 4 ; addr = addr + 4;break;         //sign 0b1111_0000
+    //64bit
+    case -1   : len = 8 ;  break;        
+   // default   : assert(0);
+  }
+  //  printf("\n pc=%lx\n",thispc);
+  //  printf("waddr = 0x%016llx\n",waddr);
+  //  printf(" addr = 0x%016llx\n",addr);
+  //  printf("wdata = 0x%016llx\n",wdata);
+  //  printf("wmask = 0x%x\n",wmask);
 
+   host_write(guest_to_host(addr), len, wdata);
+  //host_write((uint8_t*)addr, len, wdata);
+  //printf("\n write=%lx\n",thispc);
+}
 
 /*******************DIFFTEST***********************/ 
 #define CONFIG_PC_RESET_OFFSET 0x0
@@ -382,10 +430,11 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
 
 
 static inline bool difftest_check_reg(const char *name, vaddr_t pc, word_t ref, word_t dut) {
-  if (ref != dut) {
+  if ((ref  ) != (dut  )) {
     printf("\n%s is different after executing instruction at pc = " ANSI_FG_RED "%lx" ANSI_NONE
         ", right = " ANSI_FG_RED "%lx" ANSI_NONE ", wrong = " ANSI_FG_RED "%lx" ANSI_NONE ", diff = " ANSI_FG_RED "%lx" ANSI_NONE "\n",
         name, pc, ref, dut, ref ^ dut);
+      //dump_gpr();
     return false;
   }
   return true;
@@ -399,14 +448,17 @@ static inline const char* reg_name(int idx, int width) {
   return regs[check_reg_idx(idx)];
 }
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
-  if (memcmp(&cpu.gpr[1], &ref_r->gpr[1], DIFFTEST_REG_SIZE - sizeof(cpu.gpr[0]))) {
+  if (1==1) {
   int i;
+  int flag=0;
   // do not check $0
   for (i = 1; i < 32; i ++) {
-    difftest_check_reg(reg_name(i, 4), pc, ref_r->gpr[i], cpu.gpr[i]);
+    flag=flag+difftest_check_reg(reg_name(i, 4), pc, ref_r->gpr[i], cpu.gpr[i]);
   }
-  difftest_check_reg("pc", pc, ref_r->pc, cpu.pc);
-  return false;
+  
+  flag=flag+difftest_check_reg("pc", pc, ref_r->pc, (int64_t)cpu.pc);
+  if(flag==32){return true;}
+  else{return false;}
   }
   return true;
 }
@@ -481,7 +533,10 @@ void updatecpu(){
       cpu.pc=dnpc;
       if(we&&instvaild){cpu.gpr[addr]=data;}
 }
- 
+int is_exit_status_bad() {
+  int good = (npc_state.state == NPC_END && npc_state.halt_ret == 0) ;
+  return !good;
+} 
 
 /*******************MAIN***********************/
   int main(int argc, char** argv, char** env) {
@@ -514,13 +569,16 @@ void updatecpu(){
             tfp->dump(cycle++);
         #endif
         if (checkstopVAL){
+          
           npc_state.state=NPC_END;
           break;
         }
         if (npc_state.state==NPC_END||npc_state.state==NPC_ABORT){
+         
           break;
         }
         updatecpu();
+        
         if(instvaild!=0){difftest_step(thispc,dnpc);}
         top->clk =1;
         top->eval();
@@ -528,7 +586,8 @@ void updatecpu(){
         #ifdef TRACE_ON
             tfp->dump(cycle++);
         #endif
-        
+        // printf("\n thispc=%lx\n",thispc);
+        // printf("\nruntime=%ld\n",contextp->time());
       }
       
       //dump_gpr();
@@ -548,6 +607,6 @@ void updatecpu(){
       delete contextp;
       #endif
       
-      return 0;
+      return is_exit_status_bad();
   }
 

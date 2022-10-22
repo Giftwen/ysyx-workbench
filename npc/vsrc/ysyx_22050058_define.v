@@ -1,7 +1,7 @@
 /*
  * @Author: ysyx_22050058_wenjiabao
  * @Date: 2022-09-26 11:11:53
- * @LastEditTime: 2022-10-14 21:10:19
+ * @LastEditTime: 2022-10-22 01:51:29
  * @Description: define file for ysyx_22050058
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -18,6 +18,14 @@
 `define ysyx_22050058_WriteDisable      1'b0
 `define ysyx_22050058_ReadEnable        1'b1
 `define ysyx_22050058_ReadDisable       1'b0
+`define ysyx_22050058_MemWriteEnable    1'b1
+`define ysyx_22050058_MemWriteDisable   1'b0
+`define ysyx_22050058_MemReadEnable     1'b1
+`define ysyx_22050058_MemReadDisable    1'b0
+`define ysyx_22050058_MemReadVaild      1'b1
+`define ysyx_22050058_MemReadnVaild     1'b0
+`define ysyx_22050058_MemWriteVaild     1'b1
+`define ysyx_22050058_MemWritenVaild    1'b0
 `define ysyx_22050058_InstValid         1'b1
 `define ysyx_22050058_InstnVaild        1'b0
 `define ysyx_22050058_True              1'b1
@@ -25,7 +33,9 @@
 `define ysyx_22050058_ChipEnable        1'b1
 `define ysyx_22050058_ChipDisable       1'b0
 `define ysyx_22050058_AluOpBus          7:0
+`define ysyx_22050058_StoreSelBus       7:0
 `define ysyx_22050058_AluOpBusNum       8
+`define ysyx_22050058_StoreSelBusNum    8
 `define ysyx_22050058_AluSelBus         2:0
 `define ysyx_22050058_AluSelBusNum      3
 `define ysyx_22050058_StallEnable       1'b1
@@ -35,9 +45,10 @@
 `define ysyx_22050058_IsJump            1'b1
 `define ysyx_22050058_NoJump            1'b0
 `define ysyx_22050058_RegBUS            63:0
-`define ysyx_22050058_RegAddrBus        4:0
+`define ysyx_22050058_RegAddrBus        63:0
 `define ysyx_22050058_RegBUSNum         6
 `define ysyx_22050058_RegAddrBusNum     5
+`define ysyx_22050058_StoreSelBus       7:0
 
 `define ysyx_22050058_InstAdderBus      63:0
 `define ysyx_22050058_InstBus           31:0
@@ -47,7 +58,8 @@
 `define ysyx_22050058_RegNumLog2        5
 `define ysyx_22050058_InstMemNum        4294
 `define ysyx_22050058_InstMemNumLog2    31
-
+`define ysyx_22050058_MemBUS            63:0
+`define ysyx_22050058_MemAddrBus        63:0
 `define ysyx_22050058_ZeroWord          `ysyx_22050058_RegBUSNum'b0
 `define ysyx_22050058_RstVector         `ysyx_22050058_InstAdderBusNum'h80000000
 `define ysyx_22050058_NOP_REG_Addr      `ysyx_22050058_RegBUSNum'b0
@@ -60,10 +72,12 @@
 
 //*******Instruction Opcode********//
 `define ysyx_22050058_INST_TYPE_I                7'b0010011
+`define ysyx_22050058_INST_TYPE_ILD              7'b0000011
 `define ysyx_22050058_INST_TYPE_I64              7'b0011011
 `define ysyx_22050058_INST_TYPE_R                7'b0110011
 `define ysyx_22050058_INST_TYPE_R64              7'b0111011
 `define ysyx_22050058_INST_TYPE_B                7'b1100011
+`define ysyx_22050058_INST_TYPE_S                7'b0100011
 
 `define ysyx_22050058_INST_JAL                   7'b1101111
 `define ysyx_22050058_INST_JALR                  7'b1100111
@@ -100,13 +114,25 @@
 `define ysyx_22050058_INST_SLLWFUN3              3'b001
 `define ysyx_22050058_INST_SRLWFUN3              3'b101
 `define ysyx_22050058_INST_SRAWFUN3              3'b101
-
 `define ysyx_22050058_INST_BEQ                   3'b000
 `define ysyx_22050058_INST_BNE                   3'b001
 `define ysyx_22050058_INST_BLT                   3'b100
 `define ysyx_22050058_INST_BGE                   3'b101
 `define ysyx_22050058_INST_BLTU                  3'b110
 `define ysyx_22050058_INST_BGEU                  3'b111
+
+
+`define ysyx_22050058_INST_LB                    3'b000
+`define ysyx_22050058_INST_LH                    3'b001
+`define ysyx_22050058_INST_LW                    3'b010
+`define ysyx_22050058_INST_LD                    3'b011
+`define ysyx_22050058_INST_LBU                   3'b100
+`define ysyx_22050058_INST_LHU                   3'b101
+`define ysyx_22050058_INST_LWU                   3'b110
+`define ysyx_22050058_INST_SB                    3'b000
+`define ysyx_22050058_INST_SH                    3'b001
+`define ysyx_22050058_INST_SW                    3'b010
+`define ysyx_22050058_INST_SD                    3'b011
 
 `define ysyx_22050058_INST_NOP                   3'b000
 `define ysyx_22050058_INST_ENVIRONMENT           3'b000
@@ -159,8 +185,26 @@
 `define ysyx_22050058_ALU_JALR_OP                `ysyx_22050058_AluOpBusNum'd17
 `define ysyx_22050058_ALU_AUIPC_OP               `ysyx_22050058_AluOpBusNum'd18
 `define ysyx_22050058_ALU_LUI_OP                 `ysyx_22050058_AluOpBusNum'd19
+`define ysyx_22050058_ALU_LB_OP                  `ysyx_22050058_AluOpBusNum'd20
+`define ysyx_22050058_ALU_LH_OP                  `ysyx_22050058_AluOpBusNum'd21
+`define ysyx_22050058_ALU_LW_OP                  `ysyx_22050058_AluOpBusNum'd22
+`define ysyx_22050058_ALU_LD_OP                  `ysyx_22050058_AluOpBusNum'd23
+`define ysyx_22050058_ALU_LBU_OP                 `ysyx_22050058_AluOpBusNum'd24
+`define ysyx_22050058_ALU_LHU_OP                 `ysyx_22050058_AluOpBusNum'd25
+`define ysyx_22050058_ALU_LWU_OP                 `ysyx_22050058_AluOpBusNum'd26
+`define ysyx_22050058_ALU_SB_OP                  `ysyx_22050058_AluOpBusNum'd27
+`define ysyx_22050058_ALU_SH_OP                  `ysyx_22050058_AluOpBusNum'd28
+`define ysyx_22050058_ALU_SW_OP                  `ysyx_22050058_AluOpBusNum'd29
+`define ysyx_22050058_ALU_SD_OP                  `ysyx_22050058_AluOpBusNum'd30
+`define ysyx_22050058_ALU_SLLW_OP                `ysyx_22050058_AluOpBusNum'd31
+`define ysyx_22050058_ALU_SRLW_OP                `ysyx_22050058_AluOpBusNum'd32
+`define ysyx_22050058_ALU_SRAW_OP                `ysyx_22050058_AluOpBusNum'd33
 //*************************AluSel*************************//
 `define ysyx_22050058_ALU_NOP_SEL                `ysyx_22050058_AluSelBusNum'd0
 `define ysyx_22050058_ALU_ARITHMETIC_SEL         `ysyx_22050058_AluSelBusNum'd0
 `define ysyx_22050058_ALU_LOGIC_SEL              `ysyx_22050058_AluSelBusNum'd1
 `define ysyx_22050058_ALU_64W_SEL                `ysyx_22050058_AluSelBusNum'd2
+`define ysyx_22050058_ALU_LOAD_SEL               `ysyx_22050058_AluSelBusNum'd3
+`define ysyx_22050058_ALU_STORE_SEL              `ysyx_22050058_AluSelBusNum'd4
+`define ysyx_22050058_ALU_64LOGICW_SEL           `ysyx_22050058_AluSelBusNum'd5
+//*************************END*************************//

@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-27 00:11:49
- * @LastEditTime: 2022-10-18 00:56:29
+ * @LastEditTime: 2022-10-21 20:41:28
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -14,7 +14,16 @@
     input   wire    [`ysyx_22050058_InstBus]        pipeline_inst_i,
     output  reg                                     pipeline_ce_o,
     output  reg     [`ysyx_22050058_InstAdderBus]   pipeline_pc_o,
-
+    
+    //Interface with DataMem
+    input   wire    [`ysyx_22050058_MemBUS]         pipeline_memrdata_i,
+    input   wire                                    pipeline_memrdatavaild_i,
+    input   wire                                    pipeline_memwdatavaild_i,
+    output  reg                                     pipeline_memre_o,
+    output  reg     [`ysyx_22050058_StoreSelBus]    pipeline_memwe_o,
+    output  reg     [`ysyx_22050058_MemAddrBus]     pipeline_memaddr_o,
+    output  reg     [`ysyx_22050058_MemBUS]         pipeline_memwdata_o,
+    
     //Interface with CtrlBlock
     output   wire    [5:0]                           stall,
     output   wire    [5:0]                           flush,
@@ -70,10 +79,12 @@
     reg                                    ex_instvalid_r;
     
     //Interface with MemStage
+    wire   [`ysyx_22050058_AluOpBus]       ex_aluop_w;
     wire   [`ysyx_22050058_InstAdderBus]   ex_pc_w;
     wire   [`ysyx_22050058_InstAdderBus]   ex_dnpc_w;
     wire                                   ex_dpicstop_w;
     wire                                   ex_instvalid_w;
+    wire   [`ysyx_22050058_AluOpBus]       ex_aluop_o_w;
     wire   [`ysyx_22050058_RegAddrBus]     ex_reg_waddr_w;
     wire                                   ex_we_w;
     wire   [`ysyx_22050058_RegBUS]         ex_wdata_w;
@@ -82,12 +93,14 @@
     reg    [`ysyx_22050058_InstAdderBus]   mem_pc_r;
     reg    [`ysyx_22050058_InstAdderBus]   mem_dnpc_r;
     reg                                    mem_dpicstop_r;
+    reg     [`ysyx_22050058_AluOpBus]      mem_aluop_r;
     reg                                    mem_instvalid_r;
     reg     [`ysyx_22050058_RegAddrBus]    mem_reg_waddr_r;
     reg                                    mem_we_r;
     reg     [`ysyx_22050058_RegBUS]        mem_wdata_r;
 
     //Interface with WBStage
+    wire                                    mem_stall_memreq_w;
     wire     [`ysyx_22050058_InstAdderBus]  mem_pc_w;
     wire     [`ysyx_22050058_InstAdderBus]  mem_dnpc_w;
     wire                                    mem_dpicstop_w;
@@ -108,11 +121,11 @@
 //********************************************************************//
 
 //******************************DPIC******************************//
-import "DPI-C" function int checkdpicpc(input reg[63:0] dpic_o);
-import "DPI-C" function int checkdpicdnpc(input reg[63:0] dpic_o);
+import "DPI-C" function int checkdpicpc(input longint dpic_o);
+import "DPI-C" function int checkdpicdnpc(input longint dpic_o);
 import "DPI-C" function int bypassregfilewe(input reg[63:0] dpic_o);
-import "DPI-C" function int bypassregfiledata(input reg[63:0] dpic_o);
-import "DPI-C" function int bypassregfileaddr(input reg[63:0] dpic_o);    
+import "DPI-C" function int bypassregfiledata(input longint  dpic_o);
+import "DPI-C" function int bypassregfileaddr(input longint dpic_o);    
 import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o); 
     always @(*) begin
         checkdpicpc(wb_pc_r);
@@ -120,6 +133,7 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
         bypassregfilewe(wb_we_r);
         bypassregfileaddr(wb_reg_waddr_r);
         bypassregfiledata(wb_wdata_r);
+        //$display("%x",wb_wdata_r);
         checkdpicinstvaild(wb_instvalid_r);
         
     end
@@ -150,6 +164,7 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
     .rst                (rst),
     .ctrl_stall_exreq_i (stall_exreq_w),
     .ctrl_stall_idreq_i (stall_idreq_w),
+    .ctrl_stall_memreq_i(mem_stall_memreq_w),
     .ctrl_ex_isjump     (isjump_w),
     .stall              (stall),
     .flush              (flush)
@@ -219,6 +234,7 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
         .id_reg_waddr_o     (id_reg_waddr_w),
         .id_we_o            (id_we_w),
         .id_instvalid_o     (id_instvalid_w),
+        .id_ex_alusel_i     (ex_alusel_r),
         .id_ex_reg_waddr_i  (ex_reg_waddr_w),//fix data harzard
         .id_ex_wdata_i      (ex_wdata_w),//fix data harzard
         .id_ex_we_i         (ex_we_w),//fix data harzard
@@ -233,8 +249,8 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
 
     always @(posedge clk ) begin
         if (rst ==  `ysyx_22050058_RstEnable)begin  
-            ex_pc_r                  <=  `ysyx_22050058_RstVector;
-            ex_dnpc_r                <=  `ysyx_22050058_RstVector;
+            ex_pc_r                  <=  `ysyx_22050058_ZeroWord;
+            ex_dnpc_r                <=  `ysyx_22050058_ZeroWord;
             ex_dpicstop_r            <=  `ysyx_22050058_DPICNOSTOP;
             ex_aluop_r               <=  `ysyx_22050058_ALU_NOP_OP;
             ex_alusel_r              <=  `ysyx_22050058_ALU_NOP_SEL;
@@ -247,8 +263,8 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
         end else if(stall[2]==`ysyx_22050058_StallEnable
                 &&stall[3]==`ysyx_22050058_StallDisable)begin
 
-            ex_pc_r                  <=  `ysyx_22050058_RstVector;
-            ex_dnpc_r                <=  `ysyx_22050058_RstVector;
+            ex_pc_r                  <=  `ysyx_22050058_ZeroWord;
+            ex_dnpc_r                <=  `ysyx_22050058_ZeroWord;
             ex_dpicstop_r            <=  `ysyx_22050058_DPICNOSTOP;
             ex_aluop_r               <=  `ysyx_22050058_ALU_NOP_OP;
             ex_alusel_r              <=  `ysyx_22050058_ALU_NOP_SEL;
@@ -258,10 +274,25 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
             ex_reg_waddr_r           <=  `ysyx_22050058_NOP_REG_Addr;
             ex_we_r                  <=  `ysyx_22050058_WriteDisable;
             ex_instvalid_r           <=  `ysyx_22050058_InstnVaild;
+        end else if(stall[2]==`ysyx_22050058_StallEnable
+                &&stall[3]==`ysyx_22050058_StallEnable)begin
+
+            ex_pc_r                  <=  ex_pc_r;
+            ex_dnpc_r                <=  ex_dnpc_r;
+            ex_dpicstop_r            <=  ex_dpicstop_r;
+            ex_aluop_r               <=  ex_aluop_r;
+            ex_alusel_r              <=  ex_alusel_r;
+            ex_op1_wdata_r           <=  ex_op1_wdata_r;
+            ex_op2_wdata_r           <=  ex_op2_wdata_r;
+            ex_op3_wdata_r           <=  ex_op3_wdata_r;
+            ex_reg_waddr_r           <=  ex_reg_waddr_r;
+            ex_we_r                  <=  ex_we_r;
+            ex_instvalid_r           <=  ex_instvalid_r;
+        
         end else if(flush[2]==`ysyx_22050058_FlushEnable)begin
 
-            ex_pc_r                  <=  `ysyx_22050058_RstVector;
-            ex_dnpc_r                <=  `ysyx_22050058_RstVector;
+            ex_pc_r                  <=  `ysyx_22050058_ZeroWord;
+            ex_dnpc_r                <=  `ysyx_22050058_ZeroWord;
             ex_dpicstop_r            <=  `ysyx_22050058_DPICNOSTOP;
             ex_aluop_r               <=  `ysyx_22050058_ALU_NOP_OP;
             ex_alusel_r              <=  `ysyx_22050058_ALU_NOP_SEL;
@@ -311,6 +342,7 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
     .ex_pc_o            (ex_pc_w),
     .ex_dnpc_o          (ex_dnpc_w),
     .ex_dpicstop_o      (ex_dpicstop_w),
+    .ex_aluop_o         (ex_aluop_w),
     .ex_instvalid_o     (ex_instvalid_w),
     .ex_reg_waddr_o     (ex_reg_waddr_w),
     .ex_we_o            (ex_we_w),
@@ -323,28 +355,41 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
 
     always @(posedge clk ) begin
         if (rst == `ysyx_22050058_RstEnable) begin
-            mem_pc_r                  <=   `ysyx_22050058_RstVector;
-            mem_dnpc_r                <=   `ysyx_22050058_RstVector;
-            mem_dnpc_r                <=   `ysyx_22050058_RstVector;
-            mem_instvalid_r           <=   `ysyx_22050058_InstnVaild;
-            mem_dpicstop_r            <=   `ysyx_22050058_DPICNOSTOP;
-            mem_reg_waddr_r           <=   `ysyx_22050058_NOP_REG_Addr;
-            mem_we_r                  <=   `ysyx_22050058_WriteDisable;
-            mem_wdata_r               <=   `ysyx_22050058_ZeroWord;
-        end else if(stall[4]  == `ysyx_22050058_StallEnable &&
-                    stall[5] == `ysyx_22050058_StallDisable )begin
-            mem_pc_r                  <=   `ysyx_22050058_RstVector;
+            mem_pc_r                  <=   `ysyx_22050058_ZeroWord;
+            mem_dnpc_r                <=   `ysyx_22050058_ZeroWord;
             mem_dnpc_r                <=   `ysyx_22050058_RstVector;
             mem_instvalid_r           <=   `ysyx_22050058_InstnVaild;
             mem_dpicstop_r            <=   `ysyx_22050058_DPICNOSTOP;
+            mem_aluop_r               <=   `ysyx_22050058_ALU_NOP_OP;
             mem_reg_waddr_r           <=   `ysyx_22050058_NOP_REG_Addr;
             mem_we_r                  <=   `ysyx_22050058_WriteDisable;
             mem_wdata_r               <=   `ysyx_22050058_ZeroWord;
+        end else if(stall[3]  == `ysyx_22050058_StallEnable &&
+                    stall[4] == `ysyx_22050058_StallDisable )begin
+            mem_pc_r                  <=   `ysyx_22050058_ZeroWord;
+            mem_dnpc_r                <=   `ysyx_22050058_ZeroWord;
+            mem_instvalid_r           <=   `ysyx_22050058_InstnVaild;
+            mem_dpicstop_r            <=   `ysyx_22050058_DPICNOSTOP;
+            mem_aluop_r               <=   `ysyx_22050058_ALU_NOP_OP;
+            mem_reg_waddr_r           <=   `ysyx_22050058_NOP_REG_Addr;
+            mem_we_r                  <=   `ysyx_22050058_WriteDisable;
+            mem_wdata_r               <=   `ysyx_22050058_ZeroWord;
+        end else if(stall[3]  == `ysyx_22050058_StallEnable &&
+                    stall[4] == `ysyx_22050058_StallEnable )begin
+            mem_pc_r                  <=   mem_pc_r;
+            mem_dnpc_r                <=   mem_dnpc_r;
+            mem_instvalid_r           <=   mem_instvalid_r;
+            mem_dpicstop_r            <=   mem_dpicstop_r;
+            mem_aluop_r               <=   mem_aluop_r;
+            mem_reg_waddr_r           <=   mem_reg_waddr_r;
+            mem_we_r                  <=   mem_we_r;
+            mem_wdata_r               <=   mem_wdata_r;
 
-        end else if (stall[4]  == `ysyx_22050058_StallDisable)begin
+        end else if (stall[3]  == `ysyx_22050058_StallDisable)begin
             mem_pc_r                  <=   ex_pc_w; 
             mem_dnpc_r                <=   ex_dnpc_w;
             mem_dpicstop_r            <=   ex_dpicstop_w;
+            mem_aluop_r               <=   ex_aluop_w;
             mem_instvalid_r           <=   ex_instvalid_w;
             mem_reg_waddr_r           <=   ex_reg_waddr_w;
             mem_we_r                  <=   ex_we_w;
@@ -360,9 +405,20 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
     .mem_dnpc_i             (mem_dnpc_r),
     .mem_dpicstop_i         (mem_dpicstop_r),
     .mem_instvalid_i        (mem_instvalid_r),
+    .mem_aluop_i            (mem_aluop_r),
     .mem_reg_waddr_i        (mem_reg_waddr_r),
     .mem_we_i               (mem_we_r),
     .mem_wdata_i            (mem_wdata_r),
+    //Interface with CtrlBlock
+    .mem_stall_memreq_o(mem_stall_memreq_w),
+    //Interface with DataMem
+    .mem_memrdata_i         (pipeline_memrdata_i),
+    .mem_memrdatavaild_i    (pipeline_memrdatavaild_i),
+    .mem_memwdatavaild_i    (pipeline_memwdatavaild_i),
+    .mem_memre_o            (pipeline_memre_o),
+    .mem_memwe_o            (pipeline_memwe_o),
+    .mem_memaddr_o          (pipeline_memaddr_o),
+    .mem_memwdata_o         (pipeline_memwdata_o),
     //Interface with WBStage
     .mem_pc_o               (mem_pc_w),
     .mem_dnpc_o             (mem_dnpc_w),
@@ -377,14 +433,23 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
 
     always @(posedge clk ) begin
         if (rst == `ysyx_22050058_RstEnable) begin
-            wb_pc_r             <=  `ysyx_22050058_RstVector;
-            wb_dnpc_r           <=  `ysyx_22050058_RstVector;
+            wb_pc_r             <=  `ysyx_22050058_ZeroWord;
+            wb_dnpc_r           <=  `ysyx_22050058_ZeroWord;
             wb_dpicstop_r       <=  `ysyx_22050058_DPICNOSTOP;
             wb_instvalid_r      <=  `ysyx_22050058_InstnVaild;
             wb_reg_waddr_r      <=  `ysyx_22050058_NOP_REG_Addr;
             wb_we_r             <=  `ysyx_22050058_WriteDisable;
             wb_wdata_r          <=  `ysyx_22050058_ZeroWord;
-        end else begin
+        end else if(stall[4]  == `ysyx_22050058_StallEnable &&
+                    stall[5] == `ysyx_22050058_StallDisable )begin
+            wb_pc_r             <=  `ysyx_22050058_ZeroWord;
+            wb_dnpc_r           <=  `ysyx_22050058_ZeroWord;
+            wb_dpicstop_r       <=  `ysyx_22050058_DPICNOSTOP;
+            wb_instvalid_r      <=  `ysyx_22050058_InstnVaild;
+            wb_reg_waddr_r      <=  `ysyx_22050058_NOP_REG_Addr;
+            wb_we_r             <=  `ysyx_22050058_WriteDisable;
+            wb_wdata_r          <=  `ysyx_22050058_ZeroWord;
+        end else if (stall[4]  == `ysyx_22050058_StallDisable)begin
             wb_pc_r             <=  mem_pc_w;
             wb_dnpc_r           <=  mem_dnpc_w;
             wb_dpicstop_r       <=  mem_dpicstop_w;
