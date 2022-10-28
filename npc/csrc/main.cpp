@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-22 10:58:30
- * @LastEditTime: 2022-10-22 11:57:49
+ * @LastEditTime: 2022-10-28 19:30:09
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -20,7 +20,8 @@
   #include <memory>
   #include <assert.h>
   #include <dlfcn.h>
-
+#include <sys/time.h>
+#include <time.h>
   #include <getopt.h>
 
 /*******************COLOR***********************/
@@ -70,7 +71,7 @@ typedef word_t   vaddr_t;
 typedef uint32_t paddr_t;
 static uint8_t *pmem=NULL ;
 #define CONFIG_MBASE 0x80000000
-#define CONFIG_MSIZE 0x2800000
+#define CONFIG_MSIZE 0x2000000
 static char *diff_so_file = NULL;
 static int difftest_port = 1234;
 
@@ -82,7 +83,7 @@ struct NPCstate{
 } npc_state;
   
 void welcome(){
-  #ifdef CONFIG_DIFFTEST
+  #ifdef DIFFTESTq
   printf(ANSI_FG_BLUE "[welcome] DIFFTEST :" ANSI_NONE ANSI_FG_GREEN " ON\n" ANSI_NONE);
   #else
   printf(ANSI_FG_BLUE "[welcome] DIFFTEST :" ANSI_NONE ANSI_FG_RED " OFF\n" ANSI_NONE);
@@ -96,6 +97,7 @@ void welcome(){
   printf(ANSI_FG_BLUE "[welcome] If trace is enabled, a VCD file will be generated\n" ANSI_NONE);
   printf(ANSI_FG_BLUE "[welcome] Build time: %s, %s\n" ANSI_NONE, __TIME__, __DATE__);
   printf(ANSI_FG_YELLOW "Welcome to riscv-NPC!\n" ANSI_NONE);
+  printf("\n" );
   
 }
 
@@ -305,7 +307,7 @@ static inline word_t host_read(void *addr, int len) {
     case 2: return *(uint16_t *)addr;
     case 4: return *(uint32_t *)addr;
     case 8: return *(uint64_t *)addr;
-    default: {printf(ANSI_FG_RED "read error!\n" ANSI_NONE);assert(0);return 4096;}
+    default: {printf(ANSI_FG_RED "read error!\n" ANSI_NONE);npc_state.state=NPC_ABORT;return 4096;}
   }
 }
 static inline void host_write(void *addr, int len, word_t data) {
@@ -317,17 +319,47 @@ static inline void host_write(void *addr, int len, word_t data) {
     //default:{assert(0);}
 }
 }
+
+
+# define DEVICE_BASE 0xa0000000
+#define MMIO_BASE 0xa0000000
+#define SERIAL_PORT     (DEVICE_BASE + 0x00003f8)
+#define RTC_ADDR        (DEVICE_BASE + 0x0000048)
 // read
+static struct timeval boot_time = {};
+struct timeval now;
+long seconds,useconds;
+uint64_t us;
+void __am_timer_init() {
+  gettimeofday(&boot_time, NULL);
+  gettimeofday(&now, NULL);
+}
 extern "C" void pmem_read(long long raddr, long long *rdata) {
   // 总是读取地址为`raddr & ~0x7ull`的8字节返回给`rdata`
-  //printf("raddr is :0x%llx\n",raddr);
-  if(raddr >=CONFIG_MBASE){
+  //  printf("\n pc=%lx\n",thispc);
+  //  printf("raddr is :0x%llx\n",raddr);
+  
+  if(raddr == RTC_ADDR||raddr == RTC_ADDR+4){
+   // printf("\n pc=%lx\n",thispc);
+    //printf("raddr is :0x%llx\n",raddr);
+    if(raddr == RTC_ADDR) {
+    gettimeofday(&now, NULL);
+    seconds = now.tv_sec - boot_time.tv_sec;
+    useconds = now.tv_usec - boot_time.tv_usec;
+    us = seconds * 1000000 + (useconds + 500);
+    *rdata =(uint32_t)us;
+    }else if(raddr == RTC_ADDR+4) {
+    *rdata =(uint32_t)(us>>32);
+    }
+    else{*rdata = 0;}
+    //printf(RED "raddr error \n" NONE);
+    return;
+  }
+  else if(raddr >=CONFIG_MBASE){
+    // printf("\n pc=%lx\n",thispc);
+    // printf("raddr is :0x%llx\n",raddr);
     *rdata = host_read(guest_to_host(raddr & ~0x7ull),8);
     //printf("rdata is 0x%016llx\n",*rdata);
-  }
-  else {
-    *rdata = 0;
-    //printf(RED "raddr error \n" NONE);
   }
 }
 extern "C" void pmem_write(long long waddr, long long wdata, char wmask) {
@@ -364,8 +396,14 @@ extern "C" void pmem_write(long long waddr, long long wdata, char wmask) {
   //  printf(" addr = 0x%016llx\n",addr);
   //  printf("wdata = 0x%016llx\n",wdata);
   //  printf("wmask = 0x%x\n",wmask);
-
-   host_write(guest_to_host(addr), len, wdata);
+  if(addr==SERIAL_PORT){
+    
+    putc(char(wdata), stderr);
+  }
+  else{
+     host_write(guest_to_host(addr), len, wdata);
+  }
+  
   //host_write((uint8_t*)addr, len, wdata);
   //printf("\n write=%lx\n",thispc);
 }
@@ -547,6 +585,7 @@ int is_exit_status_bad() {
       int cycle_num=200;
       uint64_t limit = cycle_num;
       init_monitor(argc, argv);
+      __am_timer_init();
       #endif
       
       #ifdef TRACE_ON
@@ -559,7 +598,7 @@ int is_exit_status_bad() {
       
       #ifdef SIM_ON
       
-      while( contextp->time()<1000000&&!contextp->gotFinish()){
+      while( !contextp->gotFinish()){
         
         top->clk =0;
         if(contextp->time()<10){top->rst =1;}else{top->rst =0;}
@@ -579,7 +618,9 @@ int is_exit_status_bad() {
         }
         updatecpu();
         
-        if(instvaild!=0){difftest_step(thispc,dnpc);}
+        if(instvaild!=0){
+          //difftest_step(thispc,dnpc);
+          }
         top->clk =1;
         top->eval();
 

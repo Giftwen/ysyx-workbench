@@ -1,7 +1,7 @@
 /*
  * @Author: ysyx_22050058_wenjiabao
  * @Date: 2022-09-26 11:11:53
- * @LastEditTime: 2022-10-22 01:51:29
+ * @LastEditTime: 2022-10-24 15:51:56
  * @Description: define file for ysyx_22050058
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -86,6 +86,7 @@
 
 `define ysyx_22050058_INST_CSR                   7'b1110011
 //*******Instruction Funct3********//
+`define ysyx_22050058_INST_JALRFUN3              3'b000
 `define ysyx_22050058_INST_ADDFUN3               3'b000
 `define ysyx_22050058_INST_ADDI                  3'b000 
 `define ysyx_22050058_INST_ADDIW                 3'b000
@@ -121,6 +122,19 @@
 `define ysyx_22050058_INST_BLTU                  3'b110
 `define ysyx_22050058_INST_BGEU                  3'b111
 
+`define ysyx_22050058_INST_MULFUN3               3'b000
+`define ysyx_22050058_INST_MULHFUN3              3'b001
+`define ysyx_22050058_INST_MULHSUFUN3            3'b010
+`define ysyx_22050058_INST_MULHUFUN3             3'b011
+`define ysyx_22050058_INST_DIVFUN3               3'b100
+`define ysyx_22050058_INST_DIVUFUN3              3'b101
+`define ysyx_22050058_INST_REMFUN3               3'b110
+`define ysyx_22050058_INST_REMUFUN3              3'b111
+`define ysyx_22050058_INST_MULWFUN3              3'b000
+`define ysyx_22050058_INST_DIVWFUN3              3'b100
+`define ysyx_22050058_INST_DIVUWFUN3             3'b101
+`define ysyx_22050058_INST_REMWFUN3              3'b110
+`define ysyx_22050058_INST_REMUWFUN3             3'b111
 
 `define ysyx_22050058_INST_LB                    3'b000
 `define ysyx_22050058_INST_LH                    3'b001
@@ -159,6 +173,8 @@
 `define ysyx_22050058_INST_SLLW                  7'b0000000
 `define ysyx_22050058_INST_SRLW                  7'b0000000
 `define ysyx_22050058_INST_SRAW                  7'b0100000
+`define ysyx_22050058_INST_MDU                   7'b0000001
+
 //*******Instruction Funct12********//
 `define ysyx_22050058_INST_EBREAK                12'b000000000001
 
@@ -199,6 +215,18 @@
 `define ysyx_22050058_ALU_SLLW_OP                `ysyx_22050058_AluOpBusNum'd31
 `define ysyx_22050058_ALU_SRLW_OP                `ysyx_22050058_AluOpBusNum'd32
 `define ysyx_22050058_ALU_SRAW_OP                `ysyx_22050058_AluOpBusNum'd33
+`define ysyx_22050058_ALU_MUL_OP                 `ysyx_22050058_AluOpBusNum'd34
+`define ysyx_22050058_ALU_MULH_OP                `ysyx_22050058_AluOpBusNum'd35
+`define ysyx_22050058_ALU_MULHSU_OP              `ysyx_22050058_AluOpBusNum'd36
+`define ysyx_22050058_ALU_MULHU_OP               `ysyx_22050058_AluOpBusNum'd37
+`define ysyx_22050058_ALU_DIV_OP                 `ysyx_22050058_AluOpBusNum'd38
+`define ysyx_22050058_ALU_DIVU_OP                `ysyx_22050058_AluOpBusNum'd39
+`define ysyx_22050058_ALU_DIVW_OP                `ysyx_22050058_AluOpBusNum'd40
+`define ysyx_22050058_ALU_DIVUW_OP               `ysyx_22050058_AluOpBusNum'd41
+`define ysyx_22050058_ALU_REM_OP                 `ysyx_22050058_AluOpBusNum'd42
+`define ysyx_22050058_ALU_REMU_OP                `ysyx_22050058_AluOpBusNum'd43
+`define ysyx_22050058_ALU_REMW_OP                `ysyx_22050058_AluOpBusNum'd44
+`define ysyx_22050058_ALU_REMUW_OP               `ysyx_22050058_AluOpBusNum'd45
 //*************************AluSel*************************//
 `define ysyx_22050058_ALU_NOP_SEL                `ysyx_22050058_AluSelBusNum'd0
 `define ysyx_22050058_ALU_ARITHMETIC_SEL         `ysyx_22050058_AluSelBusNum'd0

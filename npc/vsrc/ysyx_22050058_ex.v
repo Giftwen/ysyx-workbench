@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-26 11:10:02
- * @LastEditTime: 2022-10-22 09:36:55
+ * @LastEditTime: 2022-10-24 17:31:12
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -53,6 +53,13 @@ module  ysyx_22050058_ex(
         end
         
     end
+    reg [63:0] ex_op1_mul_r,ex_op1_div_r,ex_op1_rem_r,ex_op2_mul_r,ex_op2_div_r,ex_op2_rem_r;
+    wire [127:0] arithmeticres_mul_w;
+    assign arithmeticres_mul_w      = ex_op1_mul_r*ex_op2_mul_r;
+    wire [63:0] arithmeticres_div_w;
+    assign arithmeticres_div_w      = ex_op1_div_r/ex_op2_div_r;
+    wire [63:0] arithmeticres_rem_w;
+    assign arithmeticres_rem_w      = ex_op1_rem_r%ex_op2_rem_r;
 
     always @(*) begin
         arithmeticres           =   `ysyx_22050058_ZeroWord;
@@ -61,7 +68,73 @@ module  ysyx_22050058_ex(
         ex_isjump_o             =   `ysyx_22050058_NoJump;
         ex_jumpaddr_o           =   ex_pc_i;
         ex_stall_exreq_o        =   `ysyx_22050058_StallDisable;
+        ex_op1_mul_r            =   `ysyx_22050058_ZeroWord;
+        ex_op2_mul_r            =   `ysyx_22050058_ZeroWord;
+        ex_op1_div_r            =   `ysyx_22050058_ZeroWord;
+        ex_op2_div_r            =   `ysyx_22050058_ZeroWord;
+        ex_op1_rem_r            =   `ysyx_22050058_ZeroWord;
+        ex_op2_rem_r            =   `ysyx_22050058_ZeroWord;
         case (ex_aluop_i) 
+            `ysyx_22050058_ALU_MUL_OP : begin
+                ex_op1_mul_r    =   ex_op1_wdata_i;
+                ex_op2_mul_r    =   ex_op2_wdata_i;
+                arithmeticres   =   arithmeticres_mul_w[63:0];
+            end
+            `ysyx_22050058_ALU_MULHU_OP : begin
+                ex_op1_mul_r    =   ex_op1_wdata_i;
+                ex_op2_mul_r    =   ex_op2_wdata_i;
+                arithmeticres   =   arithmeticres_mul_w[127:64];
+            end
+            `ysyx_22050058_ALU_MULH_OP : begin
+                ex_op1_mul_r    =   $signed(ex_op1_wdata_i);
+                ex_op2_mul_r    =   $signed(ex_op2_wdata_i);
+                arithmeticres   =   arithmeticres_mul_w[127:64];
+            end
+            `ysyx_22050058_ALU_MULHSU_OP : begin
+                ex_op1_mul_r    =   $signed(ex_op2_wdata_i);
+                ex_op2_mul_r    =   ex_op2_wdata_i;
+                arithmeticres   =   arithmeticres_mul_w[127:64];
+            end
+            `ysyx_22050058_ALU_DIV_OP : begin
+                ex_op1_div_r    =   $signed(ex_op1_wdata_i);
+                ex_op2_div_r    =   $signed(ex_op2_wdata_i);
+                arithmeticres   =   arithmeticres_div_w;
+            end
+            `ysyx_22050058_ALU_DIVU_OP : begin
+                ex_op1_div_r    =   ex_op1_wdata_i;
+                ex_op2_div_r    =   ex_op2_wdata_i;
+                arithmeticres   =   arithmeticres_div_w;
+            end
+            `ysyx_22050058_ALU_DIVW_OP : begin
+                ex_op1_div_r    =   $signed(ex_op1_wdata_i[31:0]);
+                ex_op2_div_r    =   $signed(ex_op2_wdata_i[31:0]);
+                arithmeticres   =   arithmeticres_div_w;
+            end
+            `ysyx_22050058_ALU_DIVUW_OP : begin
+                ex_op1_div_r    =   ex_op1_wdata_i[31:0];
+                ex_op2_div_r    =   ex_op2_wdata_i[31:0];
+                arithmeticres   =   arithmeticres_div_w;
+            end
+            `ysyx_22050058_ALU_REM_OP : begin
+                ex_op1_rem_r    =   $signed(ex_op1_wdata_i);
+                ex_op2_rem_r    =   $signed(ex_op2_wdata_i);
+                arithmeticres   =   arithmeticres_rem_w;
+            end
+            `ysyx_22050058_ALU_REMU_OP : begin
+                ex_op1_rem_r    =   ex_op1_wdata_i;
+                ex_op2_rem_r    =   ex_op2_wdata_i;
+                arithmeticres   =   arithmeticres_rem_w;
+            end
+            `ysyx_22050058_ALU_REMW_OP : begin
+                ex_op1_rem_r    =   $signed(ex_op1_wdata_i[31:0]);
+                ex_op2_rem_r    =   $signed(ex_op2_wdata_i[31:0]);
+                arithmeticres   =   arithmeticres_rem_w;
+            end
+            `ysyx_22050058_ALU_REMUW_OP : begin
+                ex_op1_rem_r    =   ex_op1_wdata_i[31:0];
+                ex_op2_rem_r    =   ex_op2_wdata_i[31:0];
+                arithmeticres   =   arithmeticres_rem_w;
+            end
             `ysyx_22050058_ALU_ADD_OP : begin
                 arithmeticres   =   ex_op1_wdata_i + ex_op2_wdata_i;
             end
@@ -101,6 +174,7 @@ module  ysyx_22050058_ex(
             `ysyx_22050058_ALU_SRAW_OP :begin
                 logices           =   $signed(ex_op1_wdata_i[31:0]) >> ex_op2_wdata_i[5:0];
             end
+            
             `ysyx_22050058_ALU_BEQ_OP :begin
                 ex_isjump_o           =   ex_op1_wdata_i == ex_op2_wdata_i;
                 ex_jumpaddr_o         =   ex_pc_i+ex_op3_wdata_i;

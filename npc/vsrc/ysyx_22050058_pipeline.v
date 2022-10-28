@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-27 00:11:49
- * @LastEditTime: 2022-10-21 20:41:28
+ * @LastEditTime: 2022-10-28 16:27:07
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -172,6 +172,35 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
 
 
 //*********************IF_ID*********************//
+        always @(posedge clk ) begin
+        if (rst == `ysyx_22050058_RstEnable) begin
+            id_pc_r     <=  `ysyx_22050058_RstVector;
+            id_dnpc_r   <=  `ysyx_22050058_RstVector;
+            id_inst_r   <=  `ysyx_22050058_ZeroWord;
+        end else if((stall[1] == `ysyx_22050058_StallEnable)
+            &&(stall[2] == `ysyx_22050058_StallDisable)) begin
+            id_pc_r     <=  `ysyx_22050058_ZeroWord;
+            id_dnpc_r   <=  `ysyx_22050058_ZeroWord;
+            id_inst_r   <=  `ysyx_22050058_ZeroWord;
+        end else if((stall[1] == `ysyx_22050058_StallEnable)
+            &&(stall[2] == `ysyx_22050058_StallEnable)) begin
+            id_pc_r     <=  id_pc_r;
+            id_dnpc_r   <=  id_dnpc_r;
+            id_inst_r   <=  id_inst_r;
+        end else if(flush[1] == `ysyx_22050058_FlushEnable) begin
+            id_pc_r     <=  `ysyx_22050058_ZeroWord;
+            id_dnpc_r   <=  `ysyx_22050058_ZeroWord;
+            id_inst_r   <=  `ysyx_22050058_ZeroWord;
+        end else if (stall[1] == `ysyx_22050058_StallDisable)begin
+            id_pc_r     <=  pipeline_thispc_i;
+            id_dnpc_r   <=  pipeline_pc_o;
+            id_inst_r   <=  pipeline_inst_i;
+        end else begin
+            id_pc_r     <=  id_pc_r;
+            id_dnpc_r   <=  id_dnpc_r;
+            id_inst_r   <=  id_inst_r;
+        end
+    end
 
     ysyx_22050058_if_id     ysyx_22050058_if_id_u0(
         //Interface with Input

@@ -1,3 +1,11 @@
+/*
+ * @Author: WenJiaBao-2022E8020282071
+ * @Date: 2022-09-08 11:34:51
+ * @LastEditTime: 2022-10-26 17:15:24
+ * @Description: 
+ * 
+ * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
+ */
 /***************************************************************************************
 * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
 *
@@ -25,7 +33,7 @@ static uint64_t boot_time = 0;
 
 static uint64_t get_time_internal() {
 #if defined(CONFIG_TARGET_AM)
-  uint64_t us = io_read(AM_TIMER_UPTIME).us;
+  uint64_t us = io_read(AM_TIMER_UPTIME).us ;
 #elif defined(CONFIG_TIMER_GETTIMEOFDAY)
   struct timeval now;
   gettimeofday(&now, NULL);

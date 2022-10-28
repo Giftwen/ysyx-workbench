@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-26 11:09:44
- * @LastEditTime: 2022-10-22 09:17:44
+ * @LastEditTime: 2022-10-24 17:34:50
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -423,9 +423,8 @@
                                 id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
-                        default:begin
-                        end
-                        
+                            default:begin
+                            end
                         endcase
                     end
                     `ysyx_22050058_INST_SRLIWFUN3:begin
@@ -440,7 +439,7 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       shamt;
-                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o      =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                             `ysyx_22050058_INST_SRAIW:begin
@@ -453,14 +452,13 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       shamt;
-                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o      =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
-                        default:begin
-                        end
+                            default:begin
+                            end
                         endcase
                     end
-                    
                     default:begin
                     end   
                 endcase
@@ -495,6 +493,19 @@
                                 id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
+                            `ysyx_22050058_INST_MDU:begin//MUL
+                                id_aluop_o          =       `ysyx_22050058_ALU_MUL_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
                         default:begin
                         end
                         endcase
@@ -504,6 +515,19 @@
                             `ysyx_22050058_INST_AND:begin
                                 id_aluop_o          =       `ysyx_22050058_ALU_AND_OP;
                                 id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
+                            `ysyx_22050058_INST_MDU:begin//REMU
+                                id_aluop_o          =       `ysyx_22050058_ALU_REMU_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
@@ -533,6 +557,19 @@
                                 id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
+                            `ysyx_22050058_INST_MDU:begin//REM
+                                id_aluop_o          =       `ysyx_22050058_ALU_REM_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
                         default:begin
                         end
                         endcase
@@ -542,6 +579,19 @@
                             `ysyx_22050058_INST_XOR:begin
                                 id_aluop_o          =       `ysyx_22050058_ALU_XOR_OP;
                                 id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
+                            `ysyx_22050058_INST_MDU:begin//DIV
+                                id_aluop_o          =       `ysyx_22050058_ALU_DIV_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
@@ -571,6 +621,19 @@
                                 id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
+                            `ysyx_22050058_INST_MDU:begin//MULHSU
+                                id_aluop_o          =       `ysyx_22050058_ALU_MULHSU_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o      =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
                         default:begin
                         end
                         endcase
@@ -580,6 +643,19 @@
                             `ysyx_22050058_INST_SLTU:begin
                                 id_aluop_o          =       `ysyx_22050058_ALU_COMPU_OP;
                                 id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o      =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
+                            `ysyx_22050058_INST_MDU:begin//MULHU
+                                id_aluop_o          =       `ysyx_22050058_ALU_MULHU_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
@@ -606,7 +682,20 @@
                                 id_reg1_raddr_o     =       rs1;
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
-                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_instvalid_o      =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
+                             `ysyx_22050058_INST_MDU:begin//MULH
+                                id_aluop_o          =       `ysyx_22050058_ALU_MULH_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o      =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -641,12 +730,177 @@
                                 id_instvalid_o        =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
+                            `ysyx_22050058_INST_MDU:begin//DIVU
+                                id_aluop_o          =       `ysyx_22050058_ALU_DIVU_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
                         default:begin
                         end
                         endcase
                     end
-                    default: begin
-                    end
+                    // `ysyx_22050058_INST_MULFUN3:begin
+                    //     case(funct7)
+                    //         `ysyx_22050058_INST_MDU:begin
+                    //             id_aluop_o          =       `ysyx_22050058_ALU_SRA_OP;
+                    //             id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                    //             id_we_o             =       `ysyx_22050058_WriteEnable;
+                    //             id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg_waddr_o      =       rd;
+                    //             id_reg1_raddr_o     =       rs1;
+                    //             id_reg2_raddr_o     =       rs2;
+                    //             id_imm              =       `ysyx_22050058_ZeroWord;
+                    //             id_instvalid_o        =       `ysyx_22050058_InstValid;
+                    //             id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    //         end
+                    //     default:begin
+                    //     end
+                    //     endcase
+                    // end
+                    // `ysyx_22050058_INST_MULHFUN3:begin
+                    //     case(funct7)
+                    //         `ysyx_22050058_INST_MDU:begin
+                    //             id_aluop_o          =       `ysyx_22050058_ALU_SRA_OP;
+                    //             id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                    //             id_we_o             =       `ysyx_22050058_WriteEnable;
+                    //             id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg_waddr_o      =       rd;
+                    //             id_reg1_raddr_o     =       rs1;
+                    //             id_reg2_raddr_o     =       rs2;
+                    //             id_imm              =       `ysyx_22050058_ZeroWord;
+                    //             id_instvalid_o        =       `ysyx_22050058_InstValid;
+                    //             id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    //         end
+                    //     default:begin
+                    //     end
+                    //     endcase
+                    // end
+                    // `ysyx_22050058_INST_MULHSUFUN3:begin
+                    //     case(funct7)
+                    //         `ysyx_22050058_INST_MDU:begin
+                    //             id_aluop_o          =       `ysyx_22050058_ALU_SRA_OP;
+                    //             id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                    //             id_we_o             =       `ysyx_22050058_WriteEnable;
+                    //             id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg_waddr_o      =       rd;
+                    //             id_reg1_raddr_o     =       rs1;
+                    //             id_reg2_raddr_o     =       rs2;
+                    //             id_imm              =       `ysyx_22050058_ZeroWord;
+                    //             id_instvalid_o        =       `ysyx_22050058_InstValid;
+                    //             id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    //         end
+                    //     default:begin
+                    //     end
+                    //     endcase
+                    // end
+                    // `ysyx_22050058_INST_MULHUFUN3:begin
+                    //     case(funct7)
+                    //         `ysyx_22050058_INST_MDU:begin
+                    //             id_aluop_o          =       `ysyx_22050058_ALU_SRA_OP;
+                    //             id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                    //             id_we_o             =       `ysyx_22050058_WriteEnable;
+                    //             id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg_waddr_o      =       rd;
+                    //             id_reg1_raddr_o     =       rs1;
+                    //             id_reg2_raddr_o     =       rs2;
+                    //             id_imm              =       `ysyx_22050058_ZeroWord;
+                    //             id_instvalid_o        =       `ysyx_22050058_InstValid;
+                    //             id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    //         end
+                    //     default:begin
+                    //     end
+                    //     endcase
+                    // end
+                    // `ysyx_22050058_INST_DIVFUN3:begin
+                    //     case(funct7)
+                    //         `ysyx_22050058_INST_MDU:begin
+                    //             id_aluop_o          =       `ysyx_22050058_ALU_SRA_OP;
+                    //             id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                    //             id_we_o             =       `ysyx_22050058_WriteEnable;
+                    //             id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg_waddr_o      =       rd;
+                    //             id_reg1_raddr_o     =       rs1;
+                    //             id_reg2_raddr_o     =       rs2;
+                    //             id_imm              =       `ysyx_22050058_ZeroWord;
+                    //             id_instvalid_o        =       `ysyx_22050058_InstValid;
+                    //             id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    //         end
+                    //     default:begin
+                    //     end
+                    //     endcase
+                    // end
+                    // `ysyx_22050058_INST_DIVUFUN3:begin
+                    //     case(funct7)
+                    //         `ysyx_22050058_INST_MDU:begin
+                    //             id_aluop_o          =       `ysyx_22050058_ALU_SRA_OP;
+                    //             id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                    //             id_we_o             =       `ysyx_22050058_WriteEnable;
+                    //             id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg_waddr_o      =       rd;
+                    //             id_reg1_raddr_o     =       rs1;
+                    //             id_reg2_raddr_o     =       rs2;
+                    //             id_imm              =       `ysyx_22050058_ZeroWord;
+                    //             id_instvalid_o        =       `ysyx_22050058_InstValid;
+                    //             id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    //         end
+                    //     default:begin
+                    //     end
+                    //     endcase
+                    // end
+                    // `ysyx_22050058_INST_REMFUN3:begin
+                    //     case(funct7)
+                    //         `ysyx_22050058_INST_MDU:begin
+                    //             id_aluop_o          =       `ysyx_22050058_ALU_SRA_OP;
+                    //             id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                    //             id_we_o             =       `ysyx_22050058_WriteEnable;
+                    //             id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg_waddr_o      =       rd;
+                    //             id_reg1_raddr_o     =       rs1;
+                    //             id_reg2_raddr_o     =       rs2;
+                    //             id_imm              =       `ysyx_22050058_ZeroWord;
+                    //             id_instvalid_o        =       `ysyx_22050058_InstValid;
+                    //             id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    //         end
+                    //     default:begin
+                    //     end
+                    //     endcase
+                    // end
+                    // default: begin
+                    // end
+                    // `ysyx_22050058_INST_REMUFUN3:begin
+                    //     case(funct7)
+                    //         `ysyx_22050058_INST_MDU:begin
+                    //             id_aluop_o          =       `ysyx_22050058_ALU_SRA_OP;
+                    //             id_alusel_o         =       `ysyx_22050058_ALU_LOGIC_SEL;
+                    //             id_we_o             =       `ysyx_22050058_WriteEnable;
+                    //             id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg_waddr_o      =       rd;
+                    //             id_reg1_raddr_o     =       rs1;
+                    //             id_reg2_raddr_o     =       rs2;
+                    //             id_imm              =       `ysyx_22050058_ZeroWord;
+                    //             id_instvalid_o        =       `ysyx_22050058_InstValid;
+                    //             id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    //         end
+                    //     default:begin
+                    //     end
+                    //     endcase
+                    // end
                 endcase
             end
             `ysyx_22050058_INST_TYPE_R64 : begin
@@ -677,6 +931,19 @@
                                 id_reg2_raddr_o     =       rs2;
                                 id_imm              =       `ysyx_22050058_ZeroWord;
                                 id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
+                            `ysyx_22050058_INST_MDU:begin//MULW
+                                id_aluop_o          =       `ysyx_22050058_ALU_MUL_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o      =       `ysyx_22050058_InstValid;
                                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
                             end
                         default:begin
@@ -720,6 +987,114 @@
                             `ysyx_22050058_INST_SRLW:begin
                                 id_aluop_o          =       `ysyx_22050058_ALU_SRLW_OP;
                                 id_alusel_o         =       `ysyx_22050058_ALU_64LOGICW_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
+                            `ysyx_22050058_INST_MDU:begin//DIVUW
+                                id_aluop_o          =       `ysyx_22050058_ALU_DIVUW_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
+                        default:begin
+                        end
+                        endcase
+                    end
+                    // `ysyx_22050058_INST_MULWFUN3:begin
+                    //     case(funct7)
+                    //         `ysyx_22050058_INST_MDU:begin
+                    //             id_aluop_o          =       `ysyx_22050058_ALU_SLLW_OP;
+                    //             id_alusel_o         =       `ysyx_22050058_ALU_64LOGICW_SEL;
+                    //             id_we_o             =       `ysyx_22050058_WriteEnable;
+                    //             id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg_waddr_o      =       rd;
+                    //             id_reg1_raddr_o     =       rs1;
+                    //             id_reg2_raddr_o     =       rs2;
+                    //             id_imm              =       `ysyx_22050058_ZeroWord;
+                    //             id_instvalid_o      =       `ysyx_22050058_InstValid;
+                    //             id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    //         end
+                    //     default:begin
+                    //     end
+                    //     endcase
+                    // end
+                    `ysyx_22050058_INST_DIVWFUN3:begin
+                        case(funct7)
+                            `ysyx_22050058_INST_MDU:begin//DIVW
+                                id_aluop_o          =       `ysyx_22050058_ALU_DIVW_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
+                        default:begin
+                        end
+                        endcase
+                    end
+                    // `ysyx_22050058_INST_DIVUWFUN3:begin
+                    //     case(funct7)
+                    //         `ysyx_22050058_INST_MDU:begin
+                    //             id_aluop_o          =       `ysyx_22050058_ALU_SLLW_OP;
+                    //             id_alusel_o         =       `ysyx_22050058_ALU_64LOGICW_SEL;
+                    //             id_we_o             =       `ysyx_22050058_WriteEnable;
+                    //             id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                    //             id_reg_waddr_o      =       rd;
+                    //             id_reg1_raddr_o     =       rs1;
+                    //             id_reg2_raddr_o     =       rs2;
+                    //             id_imm              =       `ysyx_22050058_ZeroWord;
+                    //             id_instvalid_o        =       `ysyx_22050058_InstValid;
+                    //             id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                    //         end
+                    //     default:begin
+                    //     end
+                    //     endcase
+                    // end
+                    `ysyx_22050058_INST_REMWFUN3:begin
+                        case(funct7)
+                            `ysyx_22050058_INST_MDU:begin//REMW
+                                id_aluop_o          =       `ysyx_22050058_ALU_REMW_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
+                                id_we_o             =       `ysyx_22050058_WriteEnable;
+                                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
+                                id_reg_waddr_o      =       rd;
+                                id_reg1_raddr_o     =       rs1;
+                                id_reg2_raddr_o     =       rs2;
+                                id_imm              =       `ysyx_22050058_ZeroWord;
+                                id_instvalid_o        =       `ysyx_22050058_InstValid;
+                                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                            end
+                        default:begin
+                        end
+                        endcase
+                    end
+                    `ysyx_22050058_INST_REMUWFUN3:begin
+                        case(funct7)
+                            `ysyx_22050058_INST_MDU:begin//REMUW
+                                id_aluop_o          =       `ysyx_22050058_ALU_REMUW_OP;
+                                id_alusel_o         =       `ysyx_22050058_ALU_64W_SEL;
                                 id_we_o             =       `ysyx_22050058_WriteEnable;
                                 id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
                                 id_reg2_re_o        =       `ysyx_22050058_ReadEnable;
@@ -836,17 +1211,19 @@
                 id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP; 
             end
             `ysyx_22050058_INST_JALR   : begin//xxx
-                id_aluop_o          =       `ysyx_22050058_ALU_JALR_OP;
-                id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
-                id_we_o             =       `ysyx_22050058_WriteEnable;
-                id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
-                id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
-                id_reg_waddr_o      =       rd;
-                id_reg1_raddr_o     =       rs1;//pc?
-                id_reg2_raddr_o     =       rs2;
-                id_imm              =       id_JALRimm;
-                id_instvalid_o        =       `ysyx_22050058_InstValid;
-                id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP; 
+                if(funct3==`ysyx_22050058_INST_JALRFUN3)begin
+                    id_aluop_o          =       `ysyx_22050058_ALU_JALR_OP;
+                    id_alusel_o         =       `ysyx_22050058_ALU_ARITHMETIC_SEL;
+                    id_we_o             =       `ysyx_22050058_WriteEnable;
+                    id_reg1_re_o        =       `ysyx_22050058_ReadEnable;
+                    id_reg2_re_o        =       `ysyx_22050058_ReadDisable;
+                    id_reg_waddr_o      =       rd;
+                    id_reg1_raddr_o     =       rs1;//pc?
+                    id_reg2_raddr_o     =       rs2;
+                    id_imm              =       id_JALRimm;
+                    id_instvalid_o        =       `ysyx_22050058_InstValid;
+                    id_dpicstop_o       =       `ysyx_22050058_DPICNOSTOP;
+                end
             end
             `ysyx_22050058_INST_AUIPC   : begin//xxx
                 id_aluop_o          =       `ysyx_22050058_ALU_AUIPC_OP;

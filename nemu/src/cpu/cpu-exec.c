@@ -45,6 +45,7 @@ void ReadRingBuff();
  */
 #define MAX_INST_TO_PRINT 10
 void scan_wp(vaddr_t pc);
+
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
@@ -54,41 +55,43 @@ void device_update();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
-  if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+  //if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
 #endif
-  if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
+ //if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
-  scan_wp(_this->pc);
+  //scan_wp(_this->pc);
 }
-static void itrace(Decode *_this, vaddr_t dnpc) {
-        //WriteRingBuff(_this->logbuf, 128);
-}
+// static void itrace(Decode *_this, vaddr_t dnpc) {
+//         //WriteRingBuff(_this->logbuf, 128);
+// }
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
   isa_exec_once(s);
   cpu.pc = s->dnpc;
 #ifdef CONFIG_ITRACE
-  char *p = s->logbuf;
-  p += snprintf(p, sizeof(s->logbuf),"   " FMT_WORD ":", s->pc);
-  int ilen = s->snpc - s->pc;
-  int i;
-  uint8_t *inst = (uint8_t *)&s->isa.inst.val;
-  for (i = ilen - 1; i >= 0; i --) {
-    //printf("1234\n");
-    p += snprintf(p, 4, " %02x", inst[i]);
-    //printf("5678\n");
-  }
-  int ilen_max = MUXDEF(CONFIG_ISA_x86, 8, 4);
-  int space_len = ilen_max - ilen;
-  if (space_len < 0) space_len = 0;
-  space_len = space_len * 3 + 1;
-  memset(p, ' ', space_len);
-  p += space_len;
+  //printf("asddddddddd\n");
+  //char *p = s->logbuf;
+  //p += snprintf(p, sizeof(s->logbuf),"   " FMT_WORD ":", s->pc);
+  //int ilen = s->snpc - s->pc;
+  //int i;
+  
+ //char *inst = "0";
+  //p += snprintf(p, 4, " %s", inst);
+  // for (i = ilen - 1; i >= 0; i --) {
+  //   p += snprintf(p, 4, " %02x", inst[i]);
+  // }
 
-  void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-  disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
-      MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
+  // int ilen_max = MUXDEF(CONFIG_ISA_x86, 8, 4);
+  // int space_len = ilen_max - ilen;
+  // if (space_len < 0) space_len = 0;
+  // space_len = space_len * 3 + 1;
+  // memset(p, ' ', space_len);
+  // p += space_len;
+
+  // void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+  // disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
+  //     MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
 #endif
 }
 
@@ -98,8 +101,8 @@ static void execute(uint64_t n) {
   for (;n > 0; n --) {
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
-     trace_and_difftest(&s, cpu.pc);
-     itrace(&s, cpu.pc);
+    trace_and_difftest(&s, cpu.pc);
+     //itrace(&s, cpu.pc);
     if (nemu_state.state != NEMU_RUNNING) {break;};
     IFDEF(CONFIG_DEVICE, device_update());
   }
@@ -108,10 +111,10 @@ static void execute(uint64_t n) {
 static void statistic() {
   IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
-  // Log("host time spent = " NUMBERIC_FMT " us", g_timer);
-  // Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
-  // if (g_timer > 0) Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
-  // else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
+  Log("host time spent = " NUMBERIC_FMT " us", g_timer);
+  Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
+  if (g_timer > 0) Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
+  else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
 
 void assert_fail_msg() {
@@ -130,7 +133,7 @@ void cpu_exec(uint64_t n) {
   }
 
   uint64_t timer_start = get_time();
-  InitRingBuff();
+  //InitRingBuff();
   execute(n);
 
   uint64_t timer_end = get_time();
@@ -145,12 +148,12 @@ void cpu_exec(uint64_t n) {
       // ReadRingBuff();  
       // FreeRingBuff();
     }
-      // Log("nemu: %s at pc = " FMT_WORD,
-      //     (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
-      //      (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
-      //       ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
-      //     nemu_state.halt_pc);
-      // fall through
+      Log("nemu: %s at pc = " FMT_WORD,
+          (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
+           (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
+            ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
+          nemu_state.halt_pc);
+    //  fall through
     case NEMU_QUIT: statistic();
   }
 }

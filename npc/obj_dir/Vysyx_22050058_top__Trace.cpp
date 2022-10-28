@@ -200,12 +200,21 @@ void Vysyx_22050058_top___024root__traceChgSub0(Vysyx_22050058_top___024root* vl
             tracep->chgQData(oldp+184,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__logices),64);
             tracep->chgQData(oldp+186,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__memaddr),64);
             tracep->chgQData(oldp+188,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_wdata_r),64);
+            tracep->chgQData(oldp+190,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op1_mul_r),64);
+            tracep->chgQData(oldp+192,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op1_div_r),64);
+            tracep->chgQData(oldp+194,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op1_rem_r),64);
+            tracep->chgQData(oldp+196,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op2_mul_r),64);
+            tracep->chgQData(oldp+198,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op2_div_r),64);
+            tracep->chgQData(oldp+200,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op2_rem_r),64);
+            tracep->chgWData(oldp+202,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__arithmeticres_mul_w),128);
+            tracep->chgQData(oldp+206,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__arithmeticres_div_w),64);
+            tracep->chgQData(oldp+208,(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__arithmeticres_rem_w),64);
         }
-        tracep->chgBit(oldp+190,(vlSelf->clk));
-        tracep->chgBit(oldp+191,(vlSelf->rst));
-        tracep->chgCData(oldp+192,(vlSelf->ysyx_22050058_top__DOT__stall),6);
-        tracep->chgCData(oldp+193,(vlSelf->ysyx_22050058_top__DOT__flush),6);
-        tracep->chgQData(oldp+194,(((IData)(vlSelf->rst)
+        tracep->chgBit(oldp+210,(vlSelf->clk));
+        tracep->chgBit(oldp+211,(vlSelf->rst));
+        tracep->chgCData(oldp+212,(vlSelf->ysyx_22050058_top__DOT__stall),6);
+        tracep->chgCData(oldp+213,(vlSelf->ysyx_22050058_top__DOT__flush),6);
+        tracep->chgQData(oldp+214,(((IData)(vlSelf->rst)
                                      ? 0ULL : ((0ULL 
                                                 == vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__id_reg1_raddr_w)
                                                 ? 0ULL
@@ -223,7 +232,7 @@ void Vysyx_22050058_top___024root__traceChgSub0(Vysyx_22050058_top___024root* vl
                                                     (0x1fU 
                                                      & (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__id_reg1_raddr_w))]
                                                      : 0ULL))))),64);
-        tracep->chgQData(oldp+196,(((IData)(vlSelf->rst)
+        tracep->chgQData(oldp+216,(((IData)(vlSelf->rst)
                                      ? 0ULL : ((0ULL 
                                                 == vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__id_reg2_raddr_w)
                                                 ? 0ULL
@@ -241,7 +250,7 @@ void Vysyx_22050058_top___024root__traceChgSub0(Vysyx_22050058_top___024root* vl
                                                     (0x1fU 
                                                      & (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__id_reg2_raddr_w))]
                                                      : 0ULL))))),64);
-        tracep->chgQData(oldp+198,(((((vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ex_reg_waddr_w 
+        tracep->chgQData(oldp+218,(((((vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ex_reg_waddr_w 
                                        == vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__id_reg1_raddr_w) 
                                       & (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__id_reg1_re_w)) 
                                      & (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ex_we_r))
@@ -275,7 +284,7 @@ void Vysyx_22050058_top___024root__traceChgSub0(Vysyx_22050058_top___024root* vl
                                              : ((IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__id_reg1_re_w)
                                                  ? 0ULL
                                                  : vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_id_u0__DOT__id_imm))))),64);
-        tracep->chgQData(oldp+200,(((((vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ex_reg_waddr_w 
+        tracep->chgQData(oldp+220,(((((vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ex_reg_waddr_w 
                                        == vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__id_reg2_raddr_w) 
                                       & (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__id_reg2_re_w)) 
                                      & (IData)(vlSelf->ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ex_we_r))

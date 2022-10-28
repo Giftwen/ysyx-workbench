@@ -57,6 +57,7 @@ VL_MODULE(Vysyx_22050058_top___024root) {
         CData/*0:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__wb_we_r;
         IData/*31:0*/ ysyx_22050058_top__DOT__inst;
         IData/*31:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__id_inst_r;
+        VlWide<4>/*127:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__arithmeticres_mul_w;
         QData/*63:0*/ ysyx_22050058_top__DOT__pc;
         QData/*63:0*/ ysyx_22050058_top__DOT__thispc;
         QData/*63:0*/ ysyx_22050058_top__DOT__memrdata_w;
@@ -88,15 +89,23 @@ VL_MODULE(Vysyx_22050058_top___024root) {
         QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__wb_pc_r;
         QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__wb_dnpc_r;
         QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__wb_reg_waddr_r;
-        QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__wb_wdata_r;
     };
     struct {
+        QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__wb_wdata_r;
         QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_id_u0__DOT__id_Simm;
         QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_id_u0__DOT__id_imm;
         QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__arithmeticres;
         QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__logices;
         QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__memaddr;
         QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_wdata_r;
+        QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op1_mul_r;
+        QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op1_div_r;
+        QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op1_rem_r;
+        QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op2_mul_r;
+        QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op2_div_r;
+        QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__ex_op2_rem_r;
+        QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__arithmeticres_div_w;
+        QData/*63:0*/ ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_ex_u0__DOT__arithmeticres_rem_w;
         VlUnpacked<QData/*63:0*/, 32> ysyx_22050058_top__DOT__ysyx_22050058_pipeline_u0__DOT__ysyx_22050058_regfile__DOT__gprs;
     };
 
