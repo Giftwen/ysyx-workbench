@@ -1,103 +1,140 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-10-24 11:06:23
- * @LastEditTime: 2022-10-24 13:54:03
+ * @LastEditTime: 2022-10-29 22:23:02
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
  */
 module ysyx_22050058_div #(parameter WIDTH = 64)
 (
-	input				   clk_i,
-	input				   rst_i,
-	input 				   data_valid_i,
-	input 	   [WIDTH-1:0] dividend_i,
-	input 	   [WIDTH-1:0] divisor_i,
-	output reg 		 	   qr_valid_o,
-	output reg [WIDTH-1:0] quotient_o,
-	output reg [WIDTH-1:0] remainder_o
+	input				   clk,
+	input				   rst,
+	input 				   div_ready,
+	input 				   div_datavalid_i,
+	input 	   [WIDTH-1:0] div_dividend_i,
+	input 	   [WIDTH-1:0] div_divisor_i,
+	output reg 		 	   div_doing_o,
+	output reg 		 	   div_qrvalid_o,
+	output reg [WIDTH-1:0] div_quotient_o,
+	output reg [WIDTH-1:0] div_remainder_o
 );
 
-reg [2*WIDTH  :0] remainder [WIDTH-1:0];
-reg [2*WIDTH-1:0] divisor   [WIDTH-1:0];
-reg [  WIDTH-1:0] quotient  [WIDTH-1:0];
-reg               dat_valid [WIDTH-1:0];
-genvar m;
+reg [2*WIDTH  :0] div_remainder_r 	[WIDTH-1:0];
+reg [2*WIDTH-1:0] div_divisor_r   	[WIDTH-1:0];
+reg [  WIDTH-1:0] div_quotient_r  	[WIDTH-1:0];
+reg               div_data_valid_r 	[WIDTH-1:0];
+reg 		 	  div_qrvalid_r;
+reg [WIDTH-1:0]   div_quotiento_r;
+reg [WIDTH-1:0]   div_remaindero_r;
+always @(posedge clk) begin
+    if (rst) begin
+    	div_doing_o <= 1'b0;
+    end
+    /*除法结果输出后需要将div_doing置零*/
+    else if (div_qrvalid_o) begin
+      	div_doing_o <= 1'b0;
+    end
+    /*握手成功后，也就是除法器接受输入的数据后需要把div_doing置高*/
+    else if(div_datavalid_i) begin
+      	div_doing_o <= 1'b1;
+    end
+end
+
+always @(posedge clk ) begin
+	if (rst) begin
+    	div_quotient_o 	<= 1'b0;
+		div_remainder_o	<= 0;
+		div_qrvalid_o	<=0;
+    end
+	else if (div_ready)begin
+		div_quotient_o 	<= 1'b0;
+		div_remainder_o	<= 0;
+		div_qrvalid_o	<=0;
+	end
+	else if(div_qrvalid_r)begin
+		div_quotient_o 	<= div_quotiento_r;
+		div_remainder_o	<= div_remaindero_r;
+		div_qrvalid_o	<= div_qrvalid_r;
+	end
+end
+
+genvar div_m_var;
 //get valid input data
-always @ (posedge clk_i or posedge rst_i) begin
-	if (rst_i) begin
-		remainder[0] <= {2*WIDTH+1{1'b0}};
-		divisor  [0] <= {2*WIDTH  {1'b0}};
-		quotient [0] <= {  WIDTH  {1'b0}};
-		dat_valid[0] <=            1'b0  ;
-	end else if (data_valid_i) begin
-		if (|divisor_i) begin
-			remainder[0] <= (dividend_i<<1) - (divisor_i<<WIDTH);
-			divisor  [0] <= divisor_i<<WIDTH;
-			quotient [0] <= {  WIDTH  {1'b0}};
-			dat_valid[0] <=            1'b1  ;
+always @ (posedge clk ) begin
+	if (rst) begin
+		div_remainder_r	[0] <= {2*WIDTH+1{1'b0}};
+		div_divisor_r  	[0] <= {2*WIDTH  {1'b0}};
+		div_quotient_r 	[0] <= {  WIDTH  {1'b0}};
+		div_data_valid_r[0] <=            1'b0  ;
+	end else if (div_datavalid_i) begin
+		if (|div_divisor_i) begin//if div_divisor_i is not zero
+			div_remainder_r	[0] 	<= (div_dividend_i<<1) - (div_divisor_i<<WIDTH);
+			div_divisor_r  	[0] 	<= div_divisor_i<<WIDTH;
+			div_quotient_r 	[0] 	<= {  WIDTH  {1'b0}};
+			div_data_valid_r[0] 	<=            1'b1  ;
 		end else begin
-			remainder[0] <= {2*WIDTH+1{1'b0}};
-			divisor  [0] <= {2*WIDTH  {1'b0}};
-			quotient [0] <= {  WIDTH  {1'b0}};
-			dat_valid[0] <=            1'b0  ;
+			div_remainder_r	[0] 	<= {2*WIDTH+1{1'b0}};
+			div_divisor_r  	[0] 	<= {2*WIDTH  {1'b0}};
+			div_quotient_r 	[0] 	<= {  WIDTH  {1'b0}};
+			div_data_valid_r[0] 	<=            1'b0  ;
 		end
 	end else begin
-		remainder[0] <= {2*WIDTH+1{1'b0}};
-		divisor  [0] <= {2*WIDTH  {1'b0}};
-		quotient [0] <= {  WIDTH  {1'b0}};
-		dat_valid[0] <=            1'b0  ;
+		div_remainder_r	[0]		<= {2*WIDTH+1{1'b0}};
+		div_divisor_r  	[0]		<= {2*WIDTH  {1'b0}};
+		div_quotient_r 	[0]		<= {  WIDTH  {1'b0}};
+		div_data_valid_r[0]		<=            1'b0  ;
 	end
 end
 //if n<0, n=n+d; n<<1, n=n-q; \
 //else n<<1, n=n-q;
 generate
-for (m=1;m<32;m=m+1) begin: calculate_31_cycle
-	always @ (posedge clk_i or posedge rst_i) begin
-		if (rst_i) begin
-			remainder[m] <= {2*WIDTH+1{1'b0}};
-			divisor  [m] <= {2*WIDTH  {1'b0}};
-			quotient [m] <= {  WIDTH  {1'b0}};
-			dat_valid[m] <=            1'b0  ;
-		end else if (dat_valid[m]) begin
-			if (remainder[m-1][2*WIDTH]) begin
-				remainder[m] <= ((remainder[m-1]+divisor[m-1])<<1) - divisor[m-1];
-				divisor  [m] <= divisor  [m-1];
-				quotient [m] <= quotient [m-1]<<1 + 1'b1;
-				dat_valid[m] <= dat_valid[m-1];
-			end else begin
-				remainder[m] <= (remainder[m-1]<<1) - divisor[m-1];
-				divisor  [m] <= divisor  [m-1];
-				quotient [m] <= (quotient [m-1]<<1) + 1'b1;
-				dat_valid[m] <= dat_valid[m-1];
+for (div_m_var=1;div_m_var<WIDTH;div_m_var=div_m_var+1) begin: calculate_cycle
+	always @ (posedge clk ) begin
+		if (rst) begin
+			div_remainder_r[div_m_var] 	<= {2*WIDTH+1{1'b0}};
+			div_divisor_r  [div_m_var] 	<= {2*WIDTH  {1'b0}};
+			div_quotient_r [div_m_var] 	<= {  WIDTH  {1'b0}};
+			div_data_valid_r[div_m_var] <=            1'b0  ;
+		end else if (div_data_valid_r[div_m_var-1]) begin
+			if (div_remainder_r[div_m_var-1][2*WIDTH]) begin//restore 
+				div_remainder_r[div_m_var] <= ((div_remainder_r[div_m_var-1]+div_divisor_r[div_m_var-1])<<1) - div_divisor_r[div_m_var-1];
+				div_divisor_r  [div_m_var] <= div_divisor_r  [div_m_var-1];
+				div_quotient_r [div_m_var] <= div_quotient_r [div_m_var-1]<<1 ;
+				div_data_valid_r[div_m_var] <= div_data_valid_r[div_m_var-1];
+			end else begin//not restore 
+				div_remainder_r[div_m_var] <= (div_remainder_r[div_m_var-1]<<1) - div_divisor_r[div_m_var-1];
+				div_divisor_r  [div_m_var] <= div_divisor_r  [div_m_var-1];
+				div_quotient_r [div_m_var] <= (div_quotient_r [div_m_var-1]<<1) + 1'b1;
+				div_data_valid_r[div_m_var] <= div_data_valid_r[div_m_var-1];
 			end
 		end else begin
-			remainder[m] <= remainder[m-1];
-			divisor  [m] <= divisor  [m-1];
-			quotient [m] <= quotient [m-1];
-			dat_valid[m] <= dat_valid[m-1];
+			div_remainder_r[div_m_var] <= div_remainder_r[div_m_var-1];
+			div_divisor_r  [div_m_var] <= div_divisor_r  [div_m_var-1];
+			div_quotient_r [div_m_var] <= div_quotient_r [div_m_var-1];
+			div_data_valid_r[div_m_var] <= div_data_valid_r[div_m_var-1];
 		end
 	end
 end
 endgenerate
 
-always @ (posedge clk_i or posedge rst_i) begin
-	if (rst_i) begin
-		remainder_o <= {WIDTH{1'b0}};
-		quotient_o  <= {WIDTH{1'b0}};
-		qr_valid_o  <=        1'b0  ;
-	end else if (dat_valid[31]) begin
-		if (remainder[m-1][2*WIDTH]) begin
-			remainder_o <= (remainder[31]+divisor[31])>>WIDTH;
-			quotient_o  <= quotient [31]<<1;
-			qr_valid_o  <= dat_valid[31];
+always @ (posedge clk ) begin
+	if (rst) begin
+		div_remaindero_r <= {WIDTH{1'b0}};
+		div_remaindero_r  <= {WIDTH{1'b0}};
+		div_qrvalid_r  <=        1'b0  ;
+	end else if (div_data_valid_r[WIDTH-1]) begin
+		if (div_remainder_r[WIDTH-1][2*WIDTH]) begin
+			div_remaindero_r <= (div_remainder_r[WIDTH-1]+div_divisor_r[WIDTH-1])>>WIDTH;
+			div_quotiento_r  <= div_quotient_r [WIDTH-1]<<1;
+			div_qrvalid_r  <= div_data_valid_r[WIDTH-1];
 		end else begin
-			remainder_o <= remainder[31]>>WIDTH;
-			quotient_o  <= (quotient [31]<<1) + 1'b1;
-			qr_valid_o  <= dat_valid[31];
+			div_remaindero_r <= div_remainder_r[WIDTH-1]>>WIDTH;
+			div_quotiento_r  <= (div_quotient_r [WIDTH-1]<<1) + 1'b1;
+			div_qrvalid_r  <= div_data_valid_r[WIDTH-1];
 		end
 	end else begin
-			qr_valid_o  <= dat_valid[31];
+			div_qrvalid_r  <= div_data_valid_r[WIDTH-1];
 	end
 end
 

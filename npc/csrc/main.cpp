@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-22 10:58:30
- * @LastEditTime: 2022-10-28 19:30:09
+ * @LastEditTime: 2022-10-29 22:34:19
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -71,7 +71,7 @@ typedef word_t   vaddr_t;
 typedef uint32_t paddr_t;
 static uint8_t *pmem=NULL ;
 #define CONFIG_MBASE 0x80000000
-#define CONFIG_MSIZE 0x2000000
+#define CONFIG_MSIZE 0x2800000
 static char *diff_so_file = NULL;
 static int difftest_port = 1234;
 
@@ -81,9 +81,9 @@ struct NPCstate{
   long long int halt_pc;
   long long int halt_ret;
 } npc_state;
-  
+  #define DIFFTESTq
 void welcome(){
-  #ifdef DIFFTESTq
+  #ifdef CONFIG_DIFFTEST
   printf(ANSI_FG_BLUE "[welcome] DIFFTEST :" ANSI_NONE ANSI_FG_GREEN " ON\n" ANSI_NONE);
   #else
   printf(ANSI_FG_BLUE "[welcome] DIFFTEST :" ANSI_NONE ANSI_FG_RED " OFF\n" ANSI_NONE);
@@ -341,7 +341,7 @@ extern "C" void pmem_read(long long raddr, long long *rdata) {
   
   if(raddr == RTC_ADDR||raddr == RTC_ADDR+4){
    // printf("\n pc=%lx\n",thispc);
-    //printf("raddr is :0x%llx\n",raddr);
+   // printf("raddr is :0x%llx\n",raddr);
     if(raddr == RTC_ADDR) {
     gettimeofday(&now, NULL);
     seconds = now.tv_sec - boot_time.tv_sec;
@@ -613,13 +613,14 @@ int is_exit_status_bad() {
           break;
         }
         if (npc_state.state==NPC_END||npc_state.state==NPC_ABORT){
-         
+          
           break;
         }
         updatecpu();
         
         if(instvaild!=0){
-          //difftest_step(thispc,dnpc);
+         // difftest_step(thispc,dnpc);
+         // printf("11\n");
           }
         top->clk =1;
         top->eval();
@@ -636,7 +637,7 @@ int is_exit_status_bad() {
       //isa_reg_display();
      // ref_difftest_exec(-1);
 
-      //ref_difftest_regcpy(&cpu.gpr, DIFFTEST_TO_DUT);
+      
       npc_halt(thispc,cpu.gpr[10]);
       
       #endif

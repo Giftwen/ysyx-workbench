@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-27 00:11:49
- * @LastEditTime: 2022-10-28 16:27:07
+ * @LastEditTime: 2022-10-29 21:36:13
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -352,6 +352,8 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
 
     ysyx_22050058_ex ysyx_22050058_ex_u0(
     //Interface with IDstage
+    .clk                (clk),
+    .rst                (rst),
     .ex_pc_i            (ex_pc_r),
     .ex_dnpc_i          (ex_dnpc_r),
     .ex_dpicstop_i      (ex_dpicstop_r),
@@ -364,6 +366,7 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
     .ex_reg_waddr_i     (ex_reg_waddr_r),
     .ex_we_i            (ex_we_r),
     //Interface with CtrlBlock and PCreg
+    .stall              (stall),
     .ex_stall_exreq_o   (stall_exreq_w),
     .ex_isjump_o        (isjump_w),
     .ex_jumpaddr_o      (jumpaddr_w),
