@@ -19,6 +19,7 @@
 #include <cpu/decode.h>
 
 #define R(i) gpr(i)
+#define C(i) csr(i - 0x300)
 #define Mr vaddr_read
 #define Mw vaddr_write
 typedef long long int  uint128_t;
@@ -33,7 +34,7 @@ enum {
 #define destR(n) do { *dest = n; } while (0)
 #define src1I(i) do { *src1 = i; } while (0)
 #define src2I(i) do { *src2 = i; } while (0)
-
+#define csr1C(n) do { *csr1 = n; } while (0)
 #define destI(i) do { *dest = i; } while (0)
 
 static word_t immI(uint32_t i) { return SEXT(BITS(i, 31, 20), 12); }
@@ -42,14 +43,15 @@ static word_t immS(uint32_t i) { return (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i
 static word_t immB(uint32_t i) { return SEXT((BITS(i, 30, 25)<<5) |(BITS(i, 11, 8)<<1)|(BITS(i, 7, 7)<<11)|(BITS(i, 31, 31)<<12),13);}
 static word_t immJ(uint32_t i) { return SEXT(BITS(i, 30, 21)<<1|BITS(i, 20, 20)<<11|BITS(i, 19, 12)<<12|BITS(i, 31, 31)<<20,21);}
 //concat(BITS(i, 31, 25), BITS(i, 11, 7))
-static void decode_operand(Decode *s, word_t *dest, word_t *src1, word_t *src2, int type) {
+static void decode_operand(Decode *s, word_t *dest, word_t *src1, word_t *src2,  word_t *csr1,int type) {
   uint32_t i = s->isa.inst.val;
   int rd  = BITS(i, 11, 7);
   int rs1 = BITS(i, 19, 15);
   int rs2 = BITS(i, 24, 20);
+  int cs1 = BITS(i, 31, 20);
   destR(rd);
   switch (type) {
-    case TYPE_I: src1R(rs1);     src2I(immI(i)) ; break;
+    case TYPE_I: src1R(rs1);     src2I(immI(i)) ;  csr1C(cs1);break;
     case TYPE_U: src1I(immU(i)); break;
     case TYPE_S: destI(immS(i)); src1R(rs1); src2R(rs2); break;
     case TYPE_R: src1R(rs1); src2R(rs2); break;
@@ -59,12 +61,12 @@ static void decode_operand(Decode *s, word_t *dest, word_t *src1, word_t *src2, 
 }
 
 static int decode_exec(Decode *s) {
-  word_t dest = 0, src1 = 0, src2 = 0;
+  word_t dest = 0, src1 = 0, src2 = 0,t=0,csr1 = 0;
   s->dnpc = s->snpc;
 
 #define INSTPAT_INST(s) ((s)->isa.inst.val)
 #define INSTPAT_MATCH(s, name, type, ... /* body */ ) { \
-  decode_operand(s, &dest, &src1, &src2, concat(TYPE_, type)); \
+  decode_operand(s, &dest, &src1, &src2, &csr1,concat(TYPE_, type)); \
   __VA_ARGS__ ; \
 }
 
@@ -155,7 +157,13 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000001 ????? ????? 101 ????? 01110 11", divuw   , R, R(dest) = SEXT((unsigned)BITS(src1,31,0) /  (unsigned)BITS(src2,31,0),32));
   INSTPAT("0000001 ????? ????? 110 ????? 01110 11", remw    , R, R(dest) = SEXT(((signed)BITS(src1,31,0) %  (signed)BITS(src2,31,0)),32));
   INSTPAT("0000001 ????? ????? 111 ????? 01110 11", remuw   , R, R(dest) = SEXT((unsigned)BITS(src1,31,0) %  (unsigned)BITS(src2,31,0),32));
-
+  
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, t = C(csr1);C(csr1)=src1     ;R(dest)=t);
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, t = C(csr1);C(csr1)=(t | src1) ;R(dest)=t);
+  INSTPAT("??????? ????? ????? 011 ????? 11100 11", csrrc  , I, t = C(csr1);C(csr1)=t & ~src1;R(dest)=t);
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc = isa_raise_intr(11,C(0x305)));//C(0x305) is mtvec 需要修改dnpc 因此需要将mtvec当作返回值传回
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc = isa_mret_intr());
+  
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
 

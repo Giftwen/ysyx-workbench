@@ -1,3 +1,11 @@
+/*
+ * @Author: WenJiaBao-2022E8020282071
+ * @Date: 2022-10-28 19:52:53
+ * @LastEditTime: 2022-11-01 22:21:27
+ * @Description: 
+ * 
+ * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
+ */
 /***************************************************************************************
 * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
 *
@@ -20,7 +28,7 @@
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   if (memcmp(&cpu.gpr[1], &ref_r->gpr[1], DIFFTEST_REG_SIZE - sizeof(cpu.gpr[0]))) {
   int i;
-  // do not check $0
+  
   for (i = 1; i < ARRLEN(cpu.gpr); i ++) {
     difftest_check_reg(reg_name(i, 4), pc, ref_r->gpr[i], cpu.gpr[i]);
   }

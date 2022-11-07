@@ -1,3 +1,11 @@
+/*
+ * @Author: WenJiaBao-2022E8020282071
+ * @Date: 2022-09-08 11:34:51
+ * @LastEditTime: 2022-11-06 03:15:11
+ * @Description: 
+ * 
+ * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
+ */
 /***************************************************************************************
 * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
 *
@@ -48,6 +56,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type);
 
 // interrupt/exception
 vaddr_t isa_raise_intr(word_t NO, vaddr_t epc);
+word_t isa_mret_intr();
 #define INTR_EMPTY ((word_t)-1)
 word_t isa_query_intr();
 

@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-10-21 01:03:17
- * @LastEditTime: 2022-10-21 23:11:43
+ * @LastEditTime: 2022-11-04 21:50:00
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -58,7 +58,7 @@
             data_line2       <= memwdata_i;
             data_mask        <= memwe_i;
             data_addr        <= memaddr_i;
-            pmem_write(memaddr_i,memwdata_i,memwe_i);
+            
             memwdatavaild_o <= `ysyx_22050058_MemWriteVaild;
         end else begin
             data_line2      <= `ysyx_22050058_ZeroWord;
@@ -66,5 +66,10 @@
             data_mask       <=  `ysyx_22050058_StoreSelBusNum'b00000000;
         end
 	end
-
+    always@(posedge clk)begin
+        if(memwdatavaild_o)begin
+            pmem_write(data_addr,data_line2,data_mask);
+        end
+        
+    end
 endmodule

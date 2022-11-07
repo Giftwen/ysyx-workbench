@@ -1,3 +1,11 @@
+/*
+ * @Author: WenJiaBao-2022E8020282071
+ * @Date: 2022-09-08 11:34:51
+ * @LastEditTime: 2022-11-06 03:22:52
+ * @Description: 
+ * 
+ * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
+ */
 /***************************************************************************************
 * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
 *
@@ -29,7 +37,7 @@ static const uint32_t img [] = {
 static void restart() {
   /* Set the initial program counter. */
   cpu.pc = RESET_VECTOR;
-
+  cpu.csr[0] = 0xa00001800;
   /* The zero register is always 0. */
   cpu.gpr[0] = 0;
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-27 00:11:49
- * @LastEditTime: 2022-10-29 21:36:13
+ * @LastEditTime: 2022-11-04 23:01:09
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -123,6 +123,7 @@
 //******************************DPIC******************************//
 import "DPI-C" function int checkdpicpc(input longint dpic_o);
 import "DPI-C" function int checkdpicdnpc(input longint dpic_o);
+import "DPI-C" function int checkdpicmempc(input longint dpic_o);
 import "DPI-C" function int bypassregfilewe(input reg[63:0] dpic_o);
 import "DPI-C" function int bypassregfiledata(input longint  dpic_o);
 import "DPI-C" function int bypassregfileaddr(input longint dpic_o);    
@@ -132,6 +133,7 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
         checkdpicdnpc(wb_dnpc_r);
         bypassregfilewe(wb_we_r);
         bypassregfileaddr(wb_reg_waddr_r);
+        checkdpicmempc(mem_pc_r);
         bypassregfiledata(wb_wdata_r);
         //$display("%x",wb_wdata_r);
         checkdpicinstvaild(wb_instvalid_r);
@@ -202,22 +204,6 @@ import "DPI-C" function int checkdpicinstvaild(input reg[63:0] dpic_o);
         end
     end
 
-    ysyx_22050058_if_id     ysyx_22050058_if_id_u0(
-        //Interface with Input
-        .clk            (clk),
-        .rst            (rst),
-        //Interface with CtrlBlock
-        .stall          (stall),
-        .flush          (flush),
-        //Interface with PCreg
-        .if_pc_i        (pipeline_thispc_i),
-        .if_dnpc_i      (pipeline_pc_o),
-        .if_inst_i      (pipeline_inst_i),
-        //Interface with IDstage
-        .id_pc_o        (id_pc_r),
-        .id_dnpc_o      (id_dnpc_r),
-        .id_inst_o      (id_inst_r)
-    );
 
     
     ysyx_22050058_regfile  ysyx_22050058_regfile(

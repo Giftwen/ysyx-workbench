@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-26 11:10:02
- * @LastEditTime: 2022-10-29 22:29:09
+ * @LastEditTime: 2022-11-06 20:36:33
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -58,7 +58,7 @@ module  ysyx_22050058_ex(
     end
     reg [63:0] ex_op1_mul_r,ex_op1_divrem_r,ex_op2_mul_r,ex_op2_divrem_r;
     wire [127:0] arithmeticres_mul_w;
-    assign arithmeticres_mul_w      = ex_op1_mul_r*ex_op2_mul_r;
+    //assign arithmeticres_mul_w      = ex_op1_mul_r*ex_op2_mul_r;
     wire [63:0] arithmeticres_div_w;
     wire [63:0] arithmeticres_rem_w;
  
@@ -67,9 +67,14 @@ module  ysyx_22050058_ex(
     reg ex_is_divrem_r; 
     reg ex_div_doing_r;
     reg ex_div_qrvalid_r;
+    wire ex_mul_valid_w; 
+    reg ex_is_mul_r; 
+    reg ex_mul_doing_r;
+    reg ex_mul_mulvalid_r;
     assign ex_div_valid_w   =   ex_is_divrem_r && !ex_div_doing_r && !ex_div_qrvalid_r;
-    assign ex_stall_exreq_o =   ex_is_divrem_r && !ex_div_qrvalid_r ;
-
+    assign ex_mul_valid_w   =   ex_is_mul_r && !ex_mul_doing_r && !ex_mul_mulvalid_r;
+    assign ex_stall_exreq_o =   (ex_is_divrem_r && !ex_div_qrvalid_r) || (ex_is_mul_r && !ex_mul_mulvalid_r );
+    
 ysyx_22050058_div #(.WIDTH(64)) ysyx_22050058_div_u0(
 	.clk                    (clk),
 	.rst                    (rst),
@@ -82,7 +87,18 @@ ysyx_22050058_div #(.WIDTH(64)) ysyx_22050058_div_u0(
 	.div_quotient_o         (arithmeticres_div_w),
 	.div_remainder_o        (arithmeticres_rem_w)
 );
-
+ysyx_22050058_mul   ysyx_22050058_mul_u0(
+	.clk                    (clk),
+	.rst                    (rst),
+	.mul_ready              (!stall[3]),
+	.mul_datavaild_i        (ex_mul_valid_w),
+	.multiplicand_i         (ex_op1_mul_r),
+	.multiplier_i           (ex_op2_mul_r),
+	.mul_doing_o            (ex_mul_doing_r),
+	.mul_mulvalid_o         (ex_mul_mulvalid_r),
+	.result_hi_o            (arithmeticres_mul_w[127:64]),
+	.result_lo_o            (arithmeticres_mul_w[63:0])
+);
 
     always @(*) begin
         arithmeticres           =   `ysyx_22050058_ZeroWord;
@@ -90,6 +106,7 @@ ysyx_22050058_div #(.WIDTH(64)) ysyx_22050058_div_u0(
         memaddr                 =   `ysyx_22050058_ZeroWord;
         ex_isjump_o             =   `ysyx_22050058_NoJump;
         ex_is_divrem_r          =   0;
+        ex_is_mul_r             =   0;
         ex_jumpaddr_o           =   ex_pc_i;
         ex_stall_exreq_o        =   `ysyx_22050058_StallDisable;
         ex_op1_mul_r            =   `ysyx_22050058_ZeroWord;
@@ -102,21 +119,25 @@ ysyx_22050058_div #(.WIDTH(64)) ysyx_22050058_div_u0(
                 ex_op1_mul_r    =   ex_op1_wdata_i;
                 ex_op2_mul_r    =   ex_op2_wdata_i;
                 arithmeticres   =   arithmeticres_mul_w[63:0];
+                ex_is_mul_r     =   1;
             end
             `ysyx_22050058_ALU_MULHU_OP : begin
                 ex_op1_mul_r    =   ex_op1_wdata_i;
                 ex_op2_mul_r    =   ex_op2_wdata_i;
                 arithmeticres   =   arithmeticres_mul_w[127:64];
+                ex_is_mul_r     =   1;
             end
             `ysyx_22050058_ALU_MULH_OP : begin
                 ex_op1_mul_r    =   $signed(ex_op1_wdata_i);
                 ex_op2_mul_r    =   $signed(ex_op2_wdata_i);
                 arithmeticres   =   arithmeticres_mul_w[127:64];
+                ex_is_mul_r     =   1;
             end
             `ysyx_22050058_ALU_MULHSU_OP : begin
                 ex_op1_mul_r    =   $signed(ex_op2_wdata_i);
                 ex_op2_mul_r    =   ex_op2_wdata_i;
                 arithmeticres   =   arithmeticres_mul_w[127:64];
+                ex_is_mul_r     =   1;
             end
             `ysyx_22050058_ALU_DIV_OP : begin
                 ex_op1_divrem_r    =   $signed(ex_op1_wdata_i);

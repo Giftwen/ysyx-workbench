@@ -1,3 +1,11 @@
+/*
+ * @Author: WenJiaBao-2022E8020282071
+ * @Date: 2022-09-08 11:34:51
+ * @LastEditTime: 2022-11-06 02:02:11
+ * @Description: 
+ * 
+ * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
+ */
 /***************************************************************************************
 * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
 *
@@ -22,12 +30,19 @@ static inline int check_reg_idx(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < 32));
   return idx;
 }
-
+static inline int check_csr_idx(int idx) {
+  return idx;
+}
 #define gpr(idx) (cpu.gpr[check_reg_idx(idx)])
+#define csr(idx) (cpu.csr[check_csr_idx(idx)])
 
 static inline const char* reg_name(int idx, int width) {
   extern const char* regs[];
   return regs[check_reg_idx(idx)];
+}
+static inline const char* csr_name(int idx, int width) {
+  extern const char* csrs[];
+  return csrs[check_csr_idx(idx)];
 }
 
 #endif

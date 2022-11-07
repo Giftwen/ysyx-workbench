@@ -1,4 +1,4 @@
-$(shell find $(abspath ./vsrc) -name "*.v" > ./filelist_all.f)
+$(shell find $(abspath ./vsrc) $(abspath ./vsrc/mdu) -name "*.v" > ./filelist_all.f)
 VSRC = $(shell cat ./filelist_all.f)
 #V2F = $( if [ -f $(path) ]; then  vcd2fsdb npc_sim.vcd ./obj_dir/npc_sim.vcd; fi; )
 path = ./obj_dir/npc_sim.vcd
@@ -41,9 +41,9 @@ INCFLAGS = $(addprefix -I, $(INC_PATH))
 CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\"" -DNVBOARD_ON 
 LDFLAGS += -lSDL2 -lSDL2_image
 
+DIFFSO = /home/gift/workplace/ysyx-workbench/nemu/tools/spike-diff/build/riscv64-spike-so
 
-
-DIFFSO = /home/gift/workplace/ysyx-workbench/nemu/build/riscv64-nemu-interpreter-so
+#DIFFSO = /home/gift/workplace/ysyx-workbench/nemu/build/riscv64-nemu-interpreter-so
 # $(BIN): $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 # 	@rm -rf $(OBJ_DIR)
 # 	$(VERILATOR) $(VERILATOR_CFLAGS) \
@@ -65,8 +65,8 @@ all: $(VSRC)
 
 
 run: $(VSRC)
-	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	verilator   -cc -exe -LDFLAGS -ldl --build -Wall --trace -CFLAGS "$(CPPFLAGS) -DSIM_ON  "  ./csrc/main.cpp  $^ -top-module ysyx_22050058_top   -Wno-WIDTH -Wno-CMPCONST -Wno-UNDRIVEN -Wno-REDEFMACRO -Wno-UNUSED -Wno-IGNOREDRETURN --timescale-override 1ns/1ps  
+	@$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
+	@verilator   -cc -exe -LDFLAGS -ldl --build -Wall --trace -CFLAGS "$(CPPFLAGS) -DSIM_ON  "  ./csrc/main.cpp  $^ -top-module ysyx_22050058_top   -Wno-WIDTH -Wno-CMPCONST -Wno-UNDRIVEN -Wno-REDEFMACRO -Wno-UNUSED -Wno-IGNOREDRETURN --timescale-override 1ns/1ps  
 	./obj_dir/Vysyx_22050058_top -i $(IMG) -d $(DIFFSO) 
 
 

@@ -1,7 +1,7 @@
 /*
  * @Author: WenJiaBao-2022E8020282071
  * @Date: 2022-09-22 10:58:30
- * @LastEditTime: 2022-10-29 22:34:19
+ * @LastEditTime: 2022-11-07 12:05:47
  * @Description: 
  * 
  * Copyright (c) 2022 by WenJiaBao wenjiabao0919@163.com, All Rights Reserved. 
@@ -44,8 +44,8 @@
 #define ANSI_NONE       "\33[0m"
 
 #define ANSI_FMT(str, fmt) fmt str ANSI_NONE
-
-
+void difftest_skip_ref();
+uint64_t next_is_skip = 0;
 /*******************START***********************/
 typedef struct{
   uint64_t gpr[32];
@@ -163,6 +163,7 @@ void init_monitor(int argc, char *argv[]) {
 uint64_t  checkstopVAL ;
 uint64_t  thispc       ;
 uint64_t  dnpc       ;
+uint64_t  mempc   ;
 uint64_t  we       ;
 uint64_t  data       ;
 uint64_t  addr       ;
@@ -177,6 +178,10 @@ extern "C" int checkdpicpc(long long r) {
 }
 extern "C" int checkdpicdnpc(long long r) {
   dnpc=r;
+  return 0;
+}
+extern "C" int checkdpicmempc(long long r) {
+  mempc=r;
   return 0;
 }
 extern "C" int bypassregfilewe(const svLogicVec32* r) {
@@ -340,6 +345,9 @@ extern "C" void pmem_read(long long raddr, long long *rdata) {
   //  printf("raddr is :0x%llx\n",raddr);
   
   if(raddr == RTC_ADDR||raddr == RTC_ADDR+4){
+    next_is_skip=mempc;
+    difftest_skip_ref();
+    //difftest_skip_ref();
    // printf("\n pc=%lx\n",thispc);
    // printf("raddr is :0x%llx\n",raddr);
     if(raddr == RTC_ADDR) {
@@ -397,7 +405,8 @@ extern "C" void pmem_write(long long waddr, long long wdata, char wmask) {
   //  printf("wdata = 0x%016llx\n",wdata);
   //  printf("wmask = 0x%x\n",wmask);
   if(addr==SERIAL_PORT){
-    
+    next_is_skip=mempc;
+    difftest_skip_ref();
     putc(char(wdata), stderr);
   }
   else{
@@ -420,11 +429,12 @@ void (*ref_difftest_memcpy)(paddr_t addr, void *buf, size_t n, bool direction) =
 void (*ref_difftest_regcpy)(void *dut, bool direction) = NULL;
 void (*ref_difftest_exec)(uint64_t n) = NULL;
 void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
-void (*ref_difftest_loadimage)(char * image2) = NULL;
+//void (*ref_difftest_loadimage)(char * image2) = NULL;
 
 #ifdef CONFIG_DIFFTEST
 
 static bool is_skip_ref = false;
+
 static int skip_dut_nr_inst = 0;
 
 
@@ -448,7 +458,7 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   assert(handle);
   ref_difftest_memcpy = (void(*)(paddr_t,void*,size_t,bool))dlsym(handle, "difftest_memcpy");
   assert(ref_difftest_memcpy);
-  ref_difftest_loadimage = (void(*)(char*))dlsym(handle, "load_img2");
+  //ref_difftest_loadimage = (void(*)(char*))dlsym(handle, "load_img2");
   assert(ref_difftest_memcpy);
   ref_difftest_regcpy = (void(*)(void*,bool))dlsym(handle, "difftest_regcpy");
   assert(ref_difftest_regcpy);
@@ -458,12 +468,15 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   assert(ref_difftest_raise_intr);
   void (*ref_difftest_init)(int) = (void(*)(int))dlsym(handle, "difftest_init");
   assert(ref_difftest_init);
-  // for (int i = 0; i < 32; i ++) {
-  //     cpu.gpr[i]=cpu_gpr[i];
-  //   }
+  for (int i = 0; i < 32; i ++) {
+      cpu.gpr[i]=0;
+    }
   ref_difftest_init(port);
-  ref_difftest_loadimage(img_file);
-  //ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
+  cpu.pc = CONFIG_MBASE;
+  //ref_difftest_loadimage(img_file);
+  ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
+  ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);
+  
 }
 
 
@@ -527,17 +540,19 @@ void difftest_step(vaddr_t pc, vaddr_t npc) {
     return;
   }
 
-  if (is_skip_ref) {
+  if (is_skip_ref&&(next_is_skip==pc)) {
     // to skip the checking of an instruction, just copy the reg state to reference design
     ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);
+   
     is_skip_ref = false;
     return;
   }
-
   ref_difftest_exec(1);
+  //printf("\n after exute inst\n");
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
-
+ // printf("\n after copy status\n");
   checkregs(&ref_r, pc);
+ // printf("\n after check status\n");
 }
 
 #else
@@ -603,7 +618,9 @@ int is_exit_status_bad() {
         top->clk =0;
         if(contextp->time()<10){top->rst =1;}else{top->rst =0;}
         contextp->timeInc(1);
+        
         top->eval();
+        
         #ifdef TRACE_ON
             tfp->dump(cycle++);
         #endif
@@ -616,15 +633,19 @@ int is_exit_status_bad() {
           
           break;
         }
+      
         updatecpu();
-        
+      
         if(instvaild!=0){
-         // difftest_step(thispc,dnpc);
-         // printf("11\n");
+         //difftest_step(thispc,dnpc);
+         
+         //printf("finish pc %lx\n",thispc);
           }
+        
         top->clk =1;
+       
         top->eval();
-
+       
         #ifdef TRACE_ON
             tfp->dump(cycle++);
         #endif

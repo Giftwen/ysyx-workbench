@@ -15,8 +15,8 @@ int printf(const char *fmt, ...) {
     char *s;
     char *c;
     int num;
-    char buf[976];
-    char buf2[976];
+    char buf[1976];
+    char buf2[1976];
     char *out=buf2;
     memset(out, 0, strlen(out));
     memset(buf, 0, sizeof(buf));
@@ -104,7 +104,7 @@ int printf(const char *fmt, ...) {
           }
           default:{
             for (const char *p = fmtbegin; *p; p++) { putch(*p);}
-            panic("This printf Not implemented");
+           // panic("This printf Not implemented");
             break;
           }
         }
